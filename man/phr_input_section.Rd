@@ -3,9 +3,6 @@
 \name{phr_input_section}
 \alias{phr_input_section}
 \alias{new_phr_input_section}
-\alias{phr_solution}
-\alias{phr_selected_output}
-\alias{phr_equilibrium_phases}
 \alias{as.character.phr_input_section}
 \alias{as.character.phr_input_section_character}
 \alias{print.phr_input_section}
@@ -18,12 +15,6 @@
 phr_input_section(type, number = NA, name = "", components = list())
 
 new_phr_input_section(x)
-
-phr_solution(.number = 1, .name = "", ...)
-
-phr_selected_output(.number = 1, ...)
-
-phr_equilibrium_phases(.number = 1, .name = NA, ...)
 
 \method{as.character}{phr_input_section}(x, ...)
 
@@ -42,9 +33,9 @@ as_phr_input_section(x, ...)
 \arguments{
 \item{type}{The keyword name to use (e.g. SOLUTION)}
 
-\item{number, .number}{Number of the component}
+\item{number}{Number of the component}
 
-\item{name, .name}{Name of the component}
+\item{name}{Name of the component}
 
 \item{components, ...}{Key/value pairs corresponding to lines of input}
 

@@ -1,6 +1,6 @@
 ---
 title: "Example tidyphreeqc usage"
-author: "Vignette Author"
+author: "Dewey Dunnington"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -10,6 +10,13 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
+# library(tidyverse) causes an CMD check note,
+# and depending on tidyverse is a bad idea according HW.
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(stringr)
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -17,7 +24,99 @@ knitr::opts_chunk$set(
 ```
 
 
+
+## Example
+
+Running PHREEQC is accomplished using the `phr_run()` function, which calls the program and generates the output. The function accepts character vectors of input, which can be generated using intput helper functions such as `phr_solution()`, `phr_selected_output()`, `phr_equilibrium_phases()`, and `phr_reaction_temperature()` (or roll your own input using `phr_input_section()`).
+
 ```{r}
 library(tidyphreeqc)
+phr_run(
+  phr_solution(pH = 7, temp = 25)
+)
 ```
 
+To get the results as a data frame, we need to supply a `phr_selected_output()` to the input file.
+
+```{r}
+phr_run(
+  phr_solution(pH = 7, temp = 25),
+  phr_selected_output(pH = TRUE, temp = TRUE, activities = c("OH-", "H+", "O2"))
+)
+```
+
+To find the distribution of a few solutions, you can generate a list of solutions using `phr_solution_list()`.
+
+```{r}
+phr_run(
+  phr_solution_list(pH = 5:8, temp = 12:25),
+  phr_selected_output(pH = TRUE, temp = TRUE, activities = c("OH-", "H+", "O2"))
+)
+```
+
+## Databases
+
+Some elements (for example, mercury) aren't included in the base database. There are a number of databases included in the PHREEQC package, that you can choose by specifying the `db` argument of `phr_run()`. One that includes mercury is the "minteq" database.
+
+```{r}
+phr_run(
+  phr_solution(pH = 7, temp = 25, Hg = 0.1),
+  phr_selected_output(
+    activities = c("Hg", "Hg2+2", "Hg(OH)2", "Hg(OH)2", "HgOH+", "Hg(OH)3-")
+  ),
+  db = "minteq"
+)
+```
+
+## Pourbaix diagrams
+
+```{r}
+result <- phr_run(
+  phr_solution_list(pH = seq(0, 14, 0.5), pe = seq(-14, 22, 0.5), Hg = 0.1),
+  phr_selected_output(
+    activities = c("Hg", "Hg2+2", "Hg(OH)2", "Hg(OH)2", "HgOH+", "Hg(OH)3-")
+  ),
+  db = "minteq"
+)
+
+result
+```
+
+```{r pourbaix}
+# library(tidyverse)
+result_long <- result %>%
+  as_tibble() %>%
+  gather(key = "species", value = "log_activity", starts_with("la_")) %>%
+  mutate(species = str_remove(species, "^la_"))
+
+result_long %>%
+  ggplot(aes(x = pH, y = pe, fill = log_activity)) +
+  geom_raster() +
+  stat_contour(aes(z = log_activity)) +
+  facet_wrap(~species)
+
+result_long %>%
+  filter(species != "Hg") %>%
+  group_by(pH, pe) %>%
+  summarise(
+    dominant_species = species[which.max(log_activity)],
+    dominant_log_act = max(log_activity),
+    dominance = max(log_activity) - max(setdiff(log_activity, max(log_activity)))
+  ) %>%
+  ggplot(aes(pH, pe, col = dominant_species, alpha = dominance)) +
+  geom_point()
+```
+
+## Getting raw info
+
+```{r}
+phr_solution(Hg = 0.1) %>% 
+  phr_run(db = "minteq", dump = TRUE) %>% 
+  phr_print_output()
+```
+
+```{r}
+phr_solution(Hg = 0.1) %>% 
+  phr_run(db = "minteq", dump = TRUE) %>% 
+  phr_print_dump()
+```

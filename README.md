@@ -27,8 +27,7 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 0 selected output(s)
-#> as_tibble():
-#> # A tibble: 0 x 0
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b6d51ce75'
 ```
 
 To get the results as a data frame, we need to supply a `phr_selected_output()` to the input file.
@@ -40,6 +39,7 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b66f90f0f'
 #> as_tibble():
 #> # A tibble: 1 x 13
 #>   selected_output   sim state   soln dist_x  time  step    pH    pe
@@ -58,6 +58,7 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b71f60cd0'
 #> as_tibble():
 #> # A tibble: 56 x 13
 #>    selected_output   sim state   soln dist_x  time  step    pH    pe
@@ -91,6 +92,7 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b4c66ad41'
 #> as_tibble():
 #> # A tibble: 1 x 14
 #>   selected_output   sim state   soln dist_x  time  step    pH    pe la_Hg
@@ -115,6 +117,7 @@ result <- phr_run(
 result
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b1e4c88b1'
 #> as_tibble():
 #> # A tibble: 1,189 x 14
 #>    selected_output   sim state   soln dist_x  time  step    pH    pe la_Hg
@@ -135,12 +138,12 @@ result
 
 ``` r
 library(tidyverse)
-#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
+#> ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 #> ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
 #> ✔ tibble  1.4.2     ✔ dplyr   0.7.4
 #> ✔ tidyr   0.7.2     ✔ stringr 1.3.0
 #> ✔ readr   1.1.1     ✔ forcats 0.2.0
-#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
 #> ✖ dplyr::lag()    masks stats::lag()
 result_long <- result %>%

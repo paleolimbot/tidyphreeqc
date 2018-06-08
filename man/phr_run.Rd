@@ -2,25 +2,17 @@
 % Please edit documentation in R/phreeqc_run.R
 \name{phr_run}
 \alias{phr_run}
-\alias{as.data.frame.phr_run_output}
-\alias{as_tibble.phr_run_output}
-\alias{print.phr_run_output}
 \title{Run PHREEQC}
 \usage{
-phr_run(..., db = NA)
-
-\method{as.data.frame}{phr_run_output}(x, ...)
-
-\method{as_tibble}{phr_run_output}(x, ...)
-
-\method{print}{phr_run_output}(x, ...)
+phr_run(..., db = NA, dump = NA)
 }
 \arguments{
 \item{...}{Input components}
 
 \item{db}{A database name, NA to use the default, NULL to use current phreeqc package db.}
 
-\item{x}{Output from phr_run}
+\item{dump}{Optional flag to include dump information. Defaults to NA, which detects whether
+a DUMP block is included in the input.}
 }
 \value{
 A list with components

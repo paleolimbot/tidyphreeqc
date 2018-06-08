@@ -14,5 +14,8 @@ BugReports: https://github.com/paleolimbot/tidyphreeqc/issues
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    ggplot2,
+    stringr,
+    tidyr
 VignetteBuilder: knitr
