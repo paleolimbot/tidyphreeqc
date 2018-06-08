@@ -31,5 +31,4 @@ Run PHREEQC
 \examples{
 phr_run(phreeqc::ex2)
 
-
 }

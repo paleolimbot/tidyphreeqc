@@ -3,12 +3,12 @@
 tidyphreeqc
 ===========
 
-The goal of easyphreeqc is to provide a more useful interface to the existing phreeqc package.
+The goal of tidyphreeqc is to provide a more useful interface to the existing phreeqc package.
 
 Installation
 ------------
 
-You can install easyphreeqc from github with:
+You can install tidyphreeqc from github with:
 
 ``` r
 # install.packages("devtools")
@@ -105,7 +105,7 @@ Pourbaix diagrams
 
 ``` r
 result <- phr_run(
-  phr_solution_list(pH = 0:14, pe = -14:22, Hg = 0.1),
+  phr_solution_list(pH = seq(0, 14, 0.5), pe = seq(-14, 22, 0.5), Hg = 0.1),
   phr_selected_output(
     activities = c("Hg", "Hg2+2", "Hg(OH)2", "Hg(OH)2", "HgOH+", "Hg(OH)3-")
   ),
@@ -116,31 +116,31 @@ result
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
 #> as_tibble():
-#> # A tibble: 300 x 14
+#> # A tibble: 1,189 x 14
 #>    selected_output   sim state   soln dist_x  time  step    pH    pe la_Hg
 #>    <chr>           <int> <chr>  <int>  <dbl> <dbl> <int> <dbl> <dbl> <dbl>
-#>  1 n1                  1 i_soln     1     NA    NA    NA  14.0 -13.0 -3.92
-#>  2 n1                  1 i_soln     2     NA    NA    NA  13.0 -12.0 -3.99
-#>  3 n1                  1 i_soln     3     NA    NA    NA  14.0 -12.0 -3.92
-#>  4 n1                  1 i_soln     4     NA    NA    NA  12.0 -11.0 -4.00
-#>  5 n1                  1 i_soln     5     NA    NA    NA  13.0 -11.0 -3.99
-#>  6 n1                  1 i_soln     6     NA    NA    NA  14.0 -11.0 -3.92
-#>  7 n1                  1 i_soln     7     NA    NA    NA  11.0 -10.0 -4.00
-#>  8 n1                  1 i_soln     8     NA    NA    NA  12.0 -10.0 -4.00
-#>  9 n1                  1 i_soln     9     NA    NA    NA  13.0 -10.0 -3.99
-#> 10 n1                  1 i_soln    10     NA    NA    NA  14.0 -10.0 -3.92
-#> # ... with 290 more rows, and 4 more variables: `la_Hg2+2` <dbl>,
+#>  1 n1                  1 i_soln     1     NA    NA    NA  14.0 -13.5 -3.92
+#>  2 n1                  1 i_soln     2     NA    NA    NA  13.5 -13.0 -3.98
+#>  3 n1                  1 i_soln     3     NA    NA    NA  14.0 -13.0 -3.92
+#>  4 n1                  1 i_soln     4     NA    NA    NA  13.0 -12.5 -3.99
+#>  5 n1                  1 i_soln     5     NA    NA    NA  13.5 -12.5 -3.98
+#>  6 n1                  1 i_soln     6     NA    NA    NA  14.0 -12.5 -3.92
+#>  7 n1                  1 i_soln     7     NA    NA    NA  12.5 -12.0 -4.00
+#>  8 n1                  1 i_soln     8     NA    NA    NA  13.0 -12.0 -3.99
+#>  9 n1                  1 i_soln     9     NA    NA    NA  13.5 -12.0 -3.98
+#> 10 n1                  1 i_soln    10     NA    NA    NA  14.0 -12.0 -3.92
+#> # ... with 1,179 more rows, and 4 more variables: `la_Hg2+2` <dbl>,
 #> #   `la_Hg(OH)2` <dbl>, `la_HgOH+` <dbl>, `la_Hg(OH)3-` <dbl>
 ```
 
 ``` r
 library(tidyverse)
-#> ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
 #> ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
 #> ✔ tibble  1.4.2     ✔ dplyr   0.7.4
 #> ✔ tidyr   0.7.2     ✔ stringr 1.3.0
 #> ✔ readr   1.1.1     ✔ forcats 0.2.0
-#> ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
 #> ✖ dplyr::lag()    masks stats::lag()
 result_long <- result %>%
@@ -149,8 +149,9 @@ result_long <- result %>%
   mutate(species = str_remove(species, "^la_"))
 
 result_long %>%
-  ggplot(aes(x = pH, y = pe, col = log_activity)) +
-  geom_point() +
+  ggplot(aes(x = pH, y = pe, fill = log_activity)) +
+  geom_raster() +
+  stat_contour(aes(z = log_activity)) +
   facet_wrap(~species)
 ```
 

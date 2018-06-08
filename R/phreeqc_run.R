@@ -11,7 +11,6 @@
 #' @examples
 #' phr_run(phreeqc::ex2)
 #'
-#'
 phr_run <- function(..., db = NA) {
   # concatenate the input, convert to atomic character using as.character()
   input_list <- phr_input(...)
@@ -22,10 +21,10 @@ phr_run <- function(..., db = NA) {
     # do nothing
   } else if(identical(db, NA)) {
     # use current default as saved
-    use_db(db_state$current_db, save = FALSE)
+    phr_use_db(phr_get_current_db(), save = FALSE)
   } else if(!is.null(db)) {
     # call use_db_ ...
-    match.fun(paste0("use_db_", db))(save = FALSE)
+    match.fun(paste0("phr_use_db_", db))(save = FALSE)
   }
 
   # capture string output as a file

@@ -15,11 +15,11 @@ knitr::opts_chunk$set(
 
 # tidyphreeqc
 
-The goal of easyphreeqc is to provide a more useful interface to the existing phreeqc package.
+The goal of tidyphreeqc is to provide a more useful interface to the existing phreeqc package.
 
 ## Installation
 
-You can install easyphreeqc from github with:
+You can install tidyphreeqc from github with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
@@ -73,7 +73,7 @@ phr_run(
 
 ```{r}
 result <- phr_run(
-  phr_solution_list(pH = seq(0, 14, 0.1), pe = seq(-14, 22, 0.2), Hg = 0.1),
+  phr_solution_list(pH = seq(0, 14, 0.5), pe = seq(-14, 22, 0.5), Hg = 0.1),
   phr_selected_output(
     activities = c("Hg", "Hg2+2", "Hg(OH)2", "Hg(OH)2", "HgOH+", "Hg(OH)3-")
   ),
