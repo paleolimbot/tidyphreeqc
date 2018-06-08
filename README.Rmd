@@ -73,7 +73,7 @@ phr_run(
 
 ```{r}
 result <- phr_run(
-  phr_solution_list(pH = 0:14, pe = -14:22, Hg = 0.1),
+  phr_solution_list(pH = seq(0, 14, 0.1), pe = seq(-14, 22, 0.2), Hg = 0.1),
   phr_selected_output(
     activities = c("Hg", "Hg2+2", "Hg(OH)2", "Hg(OH)2", "HgOH+", "Hg(OH)3-")
   ),
@@ -91,8 +91,9 @@ result_long <- result %>%
   mutate(species = str_remove(species, "^la_"))
 
 result_long %>%
-  ggplot(aes(x = pH, y = pe, col = log_activity)) +
-  geom_point() +
+  ggplot(aes(x = pH, y = pe, fill = log_activity)) +
+  geom_raster() +
+  stat_contour(aes(z = log_activity)) +
   facet_wrap(~species)
 
 result_long %>%
