@@ -4,12 +4,14 @@
 \alias{phr_solution_list}
 \title{Create a large number of solutions}
 \usage{
-phr_solution_list(pH = 7, pe = 4, ...)
+phr_solution_list(pH = 7, pe = 4, temp = 25, ...)
 }
 \arguments{
 \item{pH}{the pH of the solution}
 
 \item{pe}{the pe of the solution}
+
+\item{temp}{the temperature of the solution (degrees C)}
 
 \item{...}{Arguments to \link{phr_solution}, all unique combinations of which will be used.}
 }

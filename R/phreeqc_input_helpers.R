@@ -68,6 +68,7 @@ phr_selected_output <- function(.number = 1, ...) {
 #' @param ... Arguments to \link{phr_solution}, all unique combinations of which will be used.
 #' @param pH the pH of the solution
 #' @param pe the pe of the solution
+#' @param temp the temperature of the solution (degrees C)
 #'
 #' @return A \link{phr_input}
 #' @export
@@ -75,11 +76,18 @@ phr_selected_output <- function(.number = 1, ...) {
 #' @examples
 #' phr_solution_list(pH = c(5:7), pe = c(0:10), Hg = 0.1)
 #'
-phr_solution_list <- function(pH = 7, pe = 4, ...) {
-  list_in <- list(pH = pH, pe = pe, ...)
+phr_solution_list <- function(pH = 7, pe = 4, temp = 25, ...) {
+  list_in <- list(pH = pH, pe = pe, temp = temp, ...)
   df <- purrr::cross_df(
     list_in,
-    .filter = function(pH, pe, ...) !((pe > -pH) & (pe < -pH + 20.775))
+    .filter = function(pH, pe, temp, ...) {
+      # this filters out solutions that will not converge, causing the entire simulation
+      # to fail
+      H2_intercept <- 0
+      logK_O2 <- -113.374 * 1000 / ((temp + 273.15) * 1.9872 * log(10))
+      O2_intercept <- (logK_O2 / -4) - 0
+      !((pe > -pH + H2_intercept) & (pe < -pH + O2_intercept))
+    }
   )
   df$.number <- seq_len(nrow(df))
   new_phr_input(purrr::pmap(df, phr_solution))
