@@ -8,6 +8,7 @@
 #'
 phr_input <- function(...) {
   in_list <- list(...)
+  in_list <- in_list[!vapply(in_list, is.null, logical(1))]
   input_list <- lapply(in_list, as_phr_input)
   new_phr_input(do.call(c, unclass(input_list)))
 }
@@ -109,6 +110,10 @@ phr_input_section <- function(type, number = NA, name = "", components = list())
     names(components) <- rep("", length(components))
   }
 
+  # remove NULL if these values are in components. This allows sightly easier
+  # passing of default arguments in helper functions
+  components <- components[!vapply(components, is.null, logical(1))]
+
   new_phr_input_section(
     list(
       type = type,
@@ -158,6 +163,7 @@ as.character.phr_input_section_character <- function(x, ...) {
 print.phr_input_section <- function(x, ...) {
   cat("<phr_input_section>\n")
   cat(paste(as.character(x), collapse = "\n"))
+  cat("\n")
   invisible(x)
 }
 

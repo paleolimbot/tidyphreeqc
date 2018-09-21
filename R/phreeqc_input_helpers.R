@@ -101,7 +101,6 @@ phr_solution_list <- function(pH = 7, pe = 4, temp = 25, ...) {
 #' @param steps The number of steps to use between low and high
 #' @param values Explicit values to use (takes precedence over low, high, steps)
 #'
-#' @return A character vector summarising the input
 #' @export
 #'
 #' @seealso
@@ -134,6 +133,72 @@ phr_reaction_temperature <- function(.number = 1, low = 0, high = 100, steps = 1
       components = list(values)
     )
   }
+}
+
+#' Define a solution species
+#'
+#' @param reaction The formation reaction of the species, e.g.: \code{CO3-2 + H+ = HCO3-}.
+#' @param log_k The equilibrium coefficient of the reaction at 25 degrees C. Alternatively can be specified
+#'   for all temperatures using \code{analytical_expression}.
+#' @param delta_h The enthalpy of reaction, in kJ/mol (or with defined units). Used to determine the
+#'   temperature dependence of K according to the Van't-Hoff equation, if \code{analytical_expression}
+#'   is not provided.
+#' @param analytical_expression Identifier for coefficients for an analytical expression for the
+#'   temperature dependence of log K. Must be a vector of six numeric values:
+#'   \code{A1 + A2*T + A3/T + A4*log10(T) + A5 / T^2 + A6*T^2}.
+#' @param ... Further arguments in the input block
+#'
+#' @return A \link{phr_input_section}
+#' @export
+#'
+#' @seealso
+#' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-43.htm}
+#'
+#' @examples
+#' # default units are kJ/mol for log_k
+#' sp1 <- phr_solution_species("CO3-2 + H+ = HCO3-", log_k = 10.329, delta_h = -14.899)
+#' # can also specify units
+#' sp2 <- phr_solution_species("CO3-2 + H+ = HCO3-", log_k = 10.329, delta_h = "-3.561 kcal")
+#' # log_k can also be specified through an analytical expression
+#' sp3 <- phr_solution_species(
+#'  "CO3-2 + H+ = HCO3-",
+#'  analytical_expression = c(107.8871, 0.03252849, -5151.79, -38.92561, 563713.9, 0)
+#' )
+#'
+#' list(kJ = sp1, kcal = sp2, analytic = sp3, default = NULL) %>%
+#'   lapply(
+#'     phr_run,
+#'     phr_solution("C" = "1 as CO3-2", temp = 90, units = "mol/L"),
+#'     phr_selected_output(activities = "HCO3-")
+#'   )
+#'
+phr_solution_species <- function(reaction, log_k = NULL, delta_h = NULL, analytical_expression = NULL, ...) {
+
+  stopifnot(
+    is.null(analytical_expression) ||
+      ((is.numeric(analytical_expression)) && (length(analytical_expression) == 6))
+  )
+
+  dots <- list(...)
+  if(length(dots) > 0) {
+    # all named args in ...
+    stopifnot(!is.null(names(dots)), all(names(dots) != ""))
+    # log_k and delta_h reqire no prefixing, but dots do
+    names(dots) <- paste0("-", names(dots))
+  }
+
+  phr_input_section(
+    "SOLUTION_SPECIES",
+    components = c(
+      list(
+        reaction,
+        "-log_k" = log_k,
+        "-delta_h" = delta_h,
+        "-analytical_expression" = analytical_expression
+      ),
+      dots
+    )
+  )
 }
 
 #' @rdname phr_reaction_temperature

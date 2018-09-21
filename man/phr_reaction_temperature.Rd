@@ -22,9 +22,6 @@ phr_reaction_pressure(.number = 1, low = 0.5, high = 1.5, steps = 10,
 
 \item{values}{Explicit values to use (takes precedence over low, high, steps)}
 }
-\value{
-A character vector summarising the input
-}
 \description{
 Specify a reaction temperature, pressure gradient
 }
