@@ -2,9 +2,13 @@
 % Please edit documentation in R/phreeqc_input_helpers.R
 \name{phr_solution_species}
 \alias{phr_solution_species}
-\title{Define a solution species}
+\alias{phr_surface_species}
+\title{Define a solution/surface species}
 \usage{
 phr_solution_species(reaction, log_k = NULL, delta_h = NULL,
+  analytical_expression = NULL, ...)
+
+phr_surface_species(reaction, log_k = NULL, delta_h = NULL,
   analytical_expression = NULL, ...)
 }
 \arguments{
@@ -27,7 +31,7 @@ temperature dependence of log K. Must be a vector of six numeric values:
 A \link{phr_input_section}
 }
 \description{
-Define a solution species
+Define a solution/surface species
 }
 \examples{
 # default units are kJ/mol for log_k
@@ -50,4 +54,5 @@ list(kJ = sp1, kcal = sp2, analytic = sp3, default = NULL) \%>\%
 }
 \seealso{
 \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-43.htm}
+\url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-62.html}
 }

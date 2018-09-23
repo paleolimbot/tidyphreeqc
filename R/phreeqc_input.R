@@ -100,9 +100,9 @@ phr_input_section <- function(type, number = NA, name = "", components = list())
     name <- ""
   }
 
-  # check for non-atomics
+  # make sure all components can be coerced to character
   lapply(components, function(val) {
-    if(!is.atomic(val)) stop("Only atomic vectors are allowed in phr_input_section")
+    as.character(val)
   })
 
   # make sure names(components) is not null
