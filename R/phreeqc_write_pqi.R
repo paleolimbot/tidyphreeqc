@@ -25,6 +25,7 @@
 phr_write_pqi <- function(..., .file, .addEND = FALSE, .overwrite = TRUE){
 
   userInput <- list(...)
+  #Note: Maybe add functionality to accept a list later
 
   # Test if user supplied input is valid
   if (all(purrr::map_lgl(userInput, is_phr_input_section)) == FALSE) {
