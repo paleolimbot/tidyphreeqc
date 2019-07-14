@@ -4,30 +4,32 @@
 \alias{phr_write_pqi}
 \title{Write phr_input_sections to file}
 \usage{
-phr_write_pqi(..., .file, .addEND = FALSE, .overwrite = TRUE)
+phr_write_pqi(x, path)
 }
 \arguments{
-\item{...}{One or more phr_input_sections}
+\item{x}{An object of class "phr_input". See \link{phr_input} for details}
 
-\item{.file}{Path to file}
-
-\item{.addEND}{Logical. Shall a PHREEQC "END" command be appended add the end of the function call? This can be usefull if you are planning to write several models into a single file.}
-
-\item{.overwrite}{Logical. If .file already exists, shall it be overwritten (the default) or sould new input be appended to the file?}
+\item{path}{Path to file.}
 }
 \description{
-write your phr_input sections generated in tidyphreeqc to
+write your phr_input generated in tidyphreeqc to
 .pqi files readily interpretable by the widely used PHREEQC-Interactive GUI
 provided by the USGS to share your models with colleagues.
+}
+\details{
+The path supplied to the function might typically look something
+like this: "~/path/to/my_program.pqi" but note that the ".pqi" ending is
+strictly optional and any (or no) file-ending is accepted. However, in order
+to be automatically recognised by the PHREEQC-Interactive GUI as a
+PHREEQC-input file, the ".pqi" ending is necessary.
 }
 \examples{
 # create some phr_input_sections
 sol <- phr_solution(pH = 8, pe = 2, Na = 1, Cl = 1, units = "mol/l")
 phase <- phr_equilibrium_phases(Halite = c(10, 1))
 
-fil <- tempfile("data.pqi")
-phr_write_pqi(sol, phase, .file = fil, .addEND = TRUE)
-if(interactive()) file.show(paste0(fil,".pqi"))
+fil <- tempfile("data")
+phr_write_pqi(phr_input(sol, phase), path = fil)
+if(interactive()) file.show(paste0(fil))
 unlink(fil) # tidy up
-
 }

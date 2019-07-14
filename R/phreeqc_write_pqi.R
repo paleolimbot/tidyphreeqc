@@ -1,80 +1,56 @@
 #'Write phr_input_sections to file
 #'
-#'@description write your phr_input sections generated in tidyphreeqc to
+#'@description write your phr_input generated in tidyphreeqc to
 #'.pqi files readily interpretable by the widely used PHREEQC-Interactive GUI
 #'provided by the USGS to share your models with colleagues.
-#'@param ... One or more phr_input_sections
-#'@param .file Path to file
-#'@param .addEND Logical. Shall a PHREEQC "END" command be appended add the end of the function call? This can be usefull if you are planning to write several models into a single file.
-#'@param .overwrite Logical. If .file already exists, shall it be overwritten (the default) or sould new input be appended to the file?
+#'@param x An object of class "phr_input". See \link{phr_input} for details
+#'@param path Path to file.
+#'
+#'@details The path supplied to the function might typically look something
+#'like this: "~/path/to/my_program.pqi" but note that the ".pqi" ending is
+#'strictly optional and any (or no) file-ending is accepted. However, in order
+#'to be automatically recognised by the PHREEQC-Interactive GUI as a
+#'PHREEQC-input file, the ".pqi" ending is necessary.
 #'
 #'@examples
 #'# create some phr_input_sections
 #'sol <- phr_solution(pH = 8, pe = 2, Na = 1, Cl = 1, units = "mol/l")
 #'phase <- phr_equilibrium_phases(Halite = c(10, 1))
 #'
-#'fil <- tempfile("data.pqi")
-#'phr_write_pqi(sol, phase, .file = fil, .addEND = TRUE)
-#'if(interactive()) file.show(paste0(fil,".pqi"))
+#'fil <- tempfile("data")
+#'phr_write_pqi(phr_input(sol, phase), path = fil)
+#'if(interactive()) file.show(paste0(fil))
 #'unlink(fil) # tidy up
-#'
 #'@export
-#'
 
-
-phr_write_pqi <- function(..., .file, .addEND = FALSE, .overwrite = TRUE){
-
-  userInput <- list(...)
-  #Note: Maybe add functionality to accept a list later
+phr_write_pqi <- function(x, path){
 
   # Test if user supplied input is valid
-  if (all(purrr::map_lgl(userInput, is_phr_input_section)) == FALSE) {
-    stop("Objects supplied to (...) must be of class phr_input_section")
+  if (class(x) != "phr_input") {
+    stop("x must be an object of class phr_input. Type ?phr_input for details!")
   }
 
-  # Handle file endings
-  if(stringr::str_detect(.file, ".pqi$")) {
-    userPath = .file
-  } else {
-    userPath = paste0(.file, ".pqi")
-  }
-
-  # With the overwrite option there are 4 different possible scenarios:
-  # 1) file does exist and shall be overwritten --> Warning A)
-  # 2) file does exist and shall not be overwritten --> Warning B)
-  # 3) file does not exist and shall be overwritten --> no problem, no warning
-  # 4) file does not exist and shall not be overwritten --> well... you couldn't do it anyway so no problem
-  if(.overwrite) {
-    if (file.exists(userPath)){
-      unlink(userPath)
-      # Warning A)
-      warning(paste0("WARNING: file\n", userPath, "\ndid already exist.\n",
-                     "It has been overwritten."))
-    }
-  } else {
-    if (file.exists(userPath)){
-      # Warning B)
-      warning(paste0("WARNING: file\n", userPath, "\ndoes already exist.\n",
-                     "New information will be appended to file."))
-    }
+  if (all(purrr::map_lgl(x, is_phr_input_section)) == FALSE) {
+    # This may be a bit redundant now, given that phr_input(...) converts its
+    # arguments automatically, but better safe than sorry I guess.
+    stop("x must be an object of class phr_input. Type ?phr_input for details!")
   }
 
   # Convert phr_input_section#s for printing
-  output <- purrr::map(userInput, paste0)
+  output <- purrr::map(x, paste0)
+
+  # Because the call to "write" must come with append = TRUE, no old files
+  # of the same name are permitted
+  if (file.exists(path)){
+    print("File given as path already exists and will be overwritten")
+    unlink(path)
+  }
 
   # The actual work is done here
   purrr::walk(output,
               write,
-              file = userPath,
+              file = path,
               ncolumns = 1,
               append = TRUE,
               sep = "\n")
-
-  # Adding an "END" to allow for the storage of different PHREEQC Programs
-  # in a single .pqi file
-  if (.addEND){
-    write("\nEND\n", file = userPath, append = TRUE, sep = "\n")
-  }
 }
-
-

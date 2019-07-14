@@ -503,3 +503,25 @@ as.character.phr_surface_item <- function(x, ...) {
     )
   }
 }
+
+#' Insert END block
+#'
+#' This function has no arguments. It creates an END block
+#' that ends the data input for a simulation. After this keyword is read by
+#' PHREEQC, the calculations described by the input for the
+#' simulation are performed and the results printed.
+#' Additional simulations may follow in the input data set,
+#' each in turn will be terminated with an END keyword or the end of the file.
+#'
+#'@seealso
+#'\url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-37.html#pgfId-254414}
+#'
+#'@return A \link{phr_input_section}
+#'@export
+#'@examples
+#'phr_end()
+#'
+#'
+phr_end <- function() {
+  phr_input_section("END")
+}
