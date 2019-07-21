@@ -525,3 +525,24 @@ as.character.phr_surface_item <- function(x, ...) {
 phr_end <- function() {
   phr_input_section("END")
 }
+
+#' Specify a MIX of solutions
+#'
+#' @param .number Number of the component
+#' @param .name Name of the component
+#' @param ... Further arguments
+#'
+#' @seealso
+#' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-27.htm#50528257_23725}
+#'
+#' @return A \link{phr_input_section}
+#' @export
+#'
+#' @examples
+#' solution_1 <- phr_solution(.number = 1, Na = 1, Cl = 1)
+#' solution_2 <- phr_solution(.number = 2, K = 1, Cl = 1)
+#' phr_mix("1" = 0.25, "2" = 0.75) # Referring to SOLUTION ".number" in quotes
+#'
+phr_mix <- function(.number = 1, .name = "", ...) {
+  phr_input_section("MIX", number = .number, name = .name, components = list(...))
+}
