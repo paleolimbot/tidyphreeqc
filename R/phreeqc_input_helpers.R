@@ -549,6 +549,7 @@ phr_mix <- function(.number = 1, .name = "", ...) {
 
 
 #' Specify a REACTION
+#'
 #' Define irreversible reactions that transfer a specified amount of elements
 #' into your SOLUTION during a batch reaction simulation.
 #'
@@ -627,4 +628,125 @@ phr_reaction <- function(.number = 1, .name = "",
   phr_input_section(type = "REACTION", number = .number, name = .name,
                     components = components)
 
+}
+
+#' fix pH or pe of a reaction
+#'
+#' While you can state the initial pH and pe of a SOLUTION at definition,
+#' during a reaction, e.g. with an EQUILIBRIUM_PHASE, these initial conditions
+#' can (will!) change. This does not always match the true behavior of the
+#' system that the modeller is trying to depict. Sometimes the pH and/or pe
+#' of a system are supposed to be held at a constant value. PHREEQC does not
+#' come with a build-in way of fixing pe/pH, but the
+#' \href{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final.html}{User's guide to PHREEQC}
+#' provides something of an official workaround by defining pseudo-phases
+#' capable of locking pH or pe at defined values. The functions described here
+#' provide practical shortcuts to these workarounds.
+#'
+#' @param pH The desired final pH-value of the solution
+#' @param pe The desired final pe-value of the solution
+#' @param number The number of the component
+#' @param name The name of the component
+#' @param formula The chemical formula that is added or substractet from the solution until the desired equilibrium conditions are reached
+#' @param amount The amount of the species defined by \code{formula} available to try to reach desired equilibrium conditions
+#'
+#' @details The theory behind \code{pe_fix} and \code{pH_fix} is, that the
+#' presence of an additional phase controls the pe/pH of a system by reaction.
+#' For example: if \code{phr_pH_fix} is called with default \code{formula = HCl}
+#' in a simulation, PHREEQC will add or substract \href{https://en.wikipedia.org/wiki/Hydrochloric_acid}{Hydrochloric acid}
+#' to or from your system, until the specified pH is reached. Not that this
+#' will likely modify the amount of Cl in your system. Make sure this does not
+#' affect the implications of your results! It is possible to use any
+#' chemical to control pH/pe, e.g. switching from HCl to NaOH or from O2 to NaMnO4,
+#' as long as the Elements involved are defined as SOLUTION_MASTER_SPECIES.
+#'
+#' Becaue \code{pe_fix} and \code{pH_fix} rely on the equilibration with
+#' pseudo-species, they have to be defined in a PHASES block first, either in your
+#' Database or in your PHREEQC-programm. This can be done via calls to
+#' \code{phr_pH_fix_definition} and \code{phr_pe_fix_definition}. See the
+#' examples section dor details on the implementation.
+#'
+#' @seealso
+#' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-77.html#pgfId-338379}
+#'
+#' @return A \link{phr_input_section}
+#' @export
+#'
+#' @examples
+#' # Fixing pH
+#' sol <- phr_solution(pH = 7)
+#' pH_def <- phr_pH_fix_definition()
+#' pH_set <- phr_pH_fix(pH = 3)
+#' sel <- phr_selected_output(pH = TRUE)
+#'
+#' res_pH <- phr_run(
+#'   phr_input(sol, pH_def, pH_set, sel)
+#' ) %>% tibble::as_tibble()
+#'
+#' res_pH[res_pH$state == "react", "pH"]
+#'
+#' # Fixing pe
+#' sol <- phr_solution(pe = 2)
+#' pe_def <- phr_pe_fix_definition()
+#' pe_set <- phr_pe_fix(pe = 8)
+#' sel <- phr_selected_output(pe = TRUE)
+#'
+#' res_pe <- phr_run(
+#'   phr_input(sol, pe_def, pe_set, sel)
+#' ) %>% tibble::as_tibble()
+#'
+#' res_pe[res_pe$state == "react", "pe"]
+#'
+#' # When there is more than one EQUILIBRIUM_PHASE in one simulation run,
+#' # all have to be defined in the same EQUILIBRIUM_PHASE block. Thus, the
+#' # shortcut-functions who provide a one-phase-only block wont work. In this
+#' # case, define your pe_fix and pH-fix directly inside your call to
+#' # phr_equilibrium_phases(). Keep an eye negative prefix, though!
+#' sol <-  phr_solution(pH = 7, pe = 4)
+#' pH_def <- phr_pH_fix_definition() #You still need to define the pseudo-phases
+#' pe_def <- phr_pe_fix_definition()
+#' phases <- phr_equilibrium_phases(Calcite = c(0, 0.001), #somewhat alkaline phase
+#'                                  Fix_pH = c("-3", "HCl", "10"), # -3 --> pH = 3
+#'                                  Fix_pe = c("-8", "O2", "10")) # -8 --> pe = 8
+#' sel <- phr_selected_output(pH = TRUE, pe = TRUE)
+#' res_multi <- phr_run(
+#'   phr_input(sol, pH_def, pe_def, phases, sel)
+#' ) %>% tibble::as_tibble()
+#'
+#' res_multi[res_pe$state == "react", c("pH", "pe")]
+
+phr_pH_fix_definition <- function(){
+  phr_input_section(type = "PHASES",
+                    components = list("Fix_pH",
+                                      "H+ = H+",
+                                      "log_K 0.0"))
+}
+
+#' @rdname phr_pH_fix_definition
+#' @export
+phr_pe_fix_definition <- function(){
+  phr_input_section(type = "PHASES",
+                    components = list("Fix_pe",
+                                      "e- = e-",
+                                      "log_K 0.0"))
+}
+
+#' @rdname phr_pH_fix_definition
+#' @export
+phr_pH_fix <- function(pH, number = NA, name = "", formula = "HCl", amount = 10){
+  phr_input_section("EQUILIBRIUM_PHASES", number = number, name = name,
+                    components = list(paste0("Fix_pH", " ",
+                                             pH*-1, " ",
+                                             formula, " ",
+                                             amount)))
+}
+
+#' @rdname phr_pH_fix_definition
+#' @export
+phr_pe_fix <- function(pe, number = NA, name = "", formula = "O2", amount = 10){
+  phr_input_section("EQUILIBRIUM_PHASES", number = number, name = name,
+                    components = list(paste0("Fix_pe", " ",
+                                             pe*-1, " ",
+                                             formula, " ",
+                                             amount)))
 }

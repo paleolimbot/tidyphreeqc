@@ -2,9 +2,7 @@
 % Please edit documentation in R/phreeqc_input_helpers.R
 \name{phr_reaction}
 \alias{phr_reaction}
-\title{Specify a REACTION
-Define irreversible reactions that transfer a specified amount of elements
-into your SOLUTION during a batch reaction simulation.}
+\title{Specify a REACTION}
 \usage{
 phr_reaction(.number = 1, .name = "", Reaction_amount,
   Linear_steps = NA, units = "moles", ...)
@@ -26,7 +24,6 @@ phr_reaction(.number = 1, .name = "", Reaction_amount,
 A \link{phr_input_section}
 }
 \description{
-Specify a REACTION
 Define irreversible reactions that transfer a specified amount of elements
 into your SOLUTION during a batch reaction simulation.
 }
