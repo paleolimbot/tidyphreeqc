@@ -54,3 +54,128 @@ phr_write_pqi <- function(x, path){
               append = TRUE,
               sep = "\n")
 }
+
+#' Read .pqi-files into tidyphreeqc
+#'
+#' @description load .pqi-files produced by the PHREEQC-interactive GUI into
+#' the tidyphreeqc format \code{\link{phr_input}}
+#' @param path Path to file.
+#'
+#' @return An object of class \code{\link{phr_input}}
+#' @examples
+#' # create some phr_input_sections
+#' sol <- phr_solution(pH = 8, pe = 2, Na = 1, Cl = 1, units = "mol/l")
+#' phase <- phr_equilibrium_phases(Halite = c(10, 1))
+#'
+#' fil <- tempfile("data")
+#' phr_write_pqi(phr_input(sol, phase), path = fil)
+#' phr_read_pqi(path = fil)
+#' unlink(fil) # tidy up
+#'
+#' @export
+phr_read_pqi <- function(path){
+  pqi_raw <- readLines(path)
+  phr_tidy_PHREEQC(pqi_raw)
+}
+
+#' Detect keywords
+#'
+#' @param x A string, usually a line from a .pqi-file
+#'
+#' @details This function is called by \code{\link{phr_tidy_PHREEQC}}.
+#' It is not meant to be exported or to be used anywhere else, yet.
+#'
+#' @return A logical vector indicating whether or not the input was a keyword
+#'
+phr_detect_keyword <- function(x){
+  data("keywords", package = "tidyphreeqc") #get keywords
+
+  catcher <- vector("logical", length = length(x))
+  for (i in seq_along(catcher)){
+
+    if(stringr::str_detect( x[i], "^    ")){ #check if line begins with four spaces (NOT a keyword)
+      catcher[[i]] <- FALSE
+    } else {
+      catcher[[i]] <-   purrr::map_lgl(keywords, #test against keywords dataset
+                                       grepl,
+                                       x = x[i]) %>%
+        any()
+    }
+  }
+  return(catcher)
+}
+
+#' Translate PHREEQC to tidyphreeqc
+#'
+#' Take PHREEQC-code and fill it into \code{\link{phr_input_section}}'s
+#' @param x A list of strings that constitute a PHREEQC input block
+#'
+#' @details This function is called by \code{\link{phr_tidy_PHREEQC}}.
+#' It is not meant to be exported or to be used anywhere else, yet.
+#'
+#' @return A \code{\link{phr_input_section}}
+#'
+
+phr_parse_PHREEQC <- function(x){
+  input_vector_list_raw <- strsplit(x, split = " ")
+
+  input_vector_list_clean <- purrr::map(input_vector_list_raw,
+                                        function(x){
+                                          x[!(x == "")]
+                                        })
+
+  keyword <- input_vector_list_clean[[1]][1]
+
+  if(keyword == "DATABASE"){# Database calls are handled fundamentally different in R and are for now largely ignored
+    db <- strsplit(x[1], split = " ")[1]
+    do.call("cat", db)
+  } else if (keyword == "END") {# Special case "END"
+    phr_end()
+  } else {
+    headline <- input_vector_list_clean[[1]]
+    if (length(headline > 1)){# This deals with keywords not associated with index numbers (e.g. TRANSPORT)
+      number <- headline[2] %>% as.integer()
+    } else {
+      number <- ""
+    }
+    phr_input_section(type = keyword, number = number,
+                      components = input_vector_list_clean[2:length(input_vector_list_clean)])
+  }
+}
+
+#' Deal with input from a .pqi-file
+#'
+#' @param x list of strings that constitute a .pqi-file
+#'
+#' @details This function the working horse behind \code{\link{phr_read_pqi}}.
+#' It takes in the list of character vectors read from the .pqi file,
+#' determines when an where that list is to be split along the different
+#' phreeqc keywords and then shoves the pieces into
+#' \code{\link{phr_parse_PHREEQC}} to force meaning upon it.
+#' It is not meant to be exported or to be used anywhere else, yet.
+#'
+#' @return A \code{\link{phr_input}}
+#'
+phr_tidy_PHREEQC <- function(x){
+  #Find the keywords
+  pqi <- x %>%
+    tibble::enframe() %>%
+    dplyr::mutate(is_key = phr_detect_keyword(value))
+
+  n_keywords <- pqi$is_key[pqi$is_key == TRUE] %>% length()
+  if(!(n_keywords >= 1)){stop("Could not identify any PHREEQC keywords.")}
+
+  indices_keywords <- which(pqi$is_key)
+  block_ends <- c(indices_keywords[2:n_keywords]-1, nrow(pqi))
+
+  # split the raw input into pieces, one keyword at a time
+  pqi_blocks <- vector("list", length = n_keywords)
+  for (i in seq(1:n_keywords)){
+    pqi_blocks[[i]] <- pqi$value[seq(indices_keywords[i], block_ends[i])]
+  }
+
+  # Translate the blocks of PHREEQC strings into phreeqc_input_sections
+  sections <- purrr::map(pqi_blocks, phr_parse_PHREEQC)
+  result <- do.call("phr_input", sections) #gotta love do.call
+  return(result)
+}
