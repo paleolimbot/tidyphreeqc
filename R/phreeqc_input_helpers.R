@@ -546,3 +546,85 @@ phr_end <- function() {
 phr_mix <- function(.number = 1, .name = "", ...) {
   phr_input_section("MIX", number = .number, name = .name, components = list(...))
 }
+
+
+#' Specify a REACTION
+#' Define irreversible reactions that transfer a specified amount of elements
+#' into your SOLUTION during a batch reaction simulation.
+#'
+#' @param .number Number of the component
+#' @param .name Name of the component
+#' @param Reaction_amount amount of components added per step
+#' @param Linear_steps number of times a \code{Reaction_amount} shall be added
+#' @param units character vector of length = 1. Either "moles", "millimoles" or "micromoles"
+#' @param ... Further arguments
+#'
+#' @details The steps at which components are added to the solution can be
+#' defined either explicitly or implicitly. For an explicit definition provide
+#' \code{Reaction_amoun} with a vector where each element refers to one
+#'  amount (in "units") at the step of the elements index. For the implicit
+#'  definition, \code{Reaction_amount} needs to be given as a single numeric and
+#'  \code{Linear_steps} is set to the number of times that amount is added to
+#'  the SOLUTION to cause a REACTION.
+#'
+#' @seealso
+#' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-33.htm#50528257_75635}
+#'
+#' @return A \link{phr_input_section}
+#' @export
+#'
+#' @examples
+#' #Explicit definition:
+#' phr_reaction(Anhydrite = 1, Reaction_amount = c(1, 1, 2, 2, 2, 8, 3),
+#'  units = "micromoles")
+#'
+#' #Implicit definition:
+#' phr_reaction(Pyrite = 1, Reaction_amount = 5,
+#' units = "millimoles", Linear_steps = 14)
+#'
+#' #PHREEQC accepts not only EQUILIBRIUM_PHASES but any formula composed of
+#' #defined SOLUTION_MASTER_SPECIES. It is up to you, however, to make sure
+#' #the reaction you specify does actually make sense. In a REACTION block
+#' #PHREEQC will dissolve anything, regardless of phase solubility
+#' phr_reaction(C8H18O = 1, Reaction_amount = 0.1, Linear_steps = 10)
+#'
+#'
+phr_reaction <- function(.number = 1, .name = "",
+                         Reaction_amount, Linear_steps = NA,
+                         units = "moles", ...) {
+  components = list(...)
+  component_length <- length(components)
+
+  if (units %in% c("moles", "millimoles", "micromoles") == FALSE) {
+    stop("Unrecognized units. Must be either moles, millimoles or micromoles.")
+  }
+
+  if(!is.na(Linear_steps)){ #linear step branch
+    test_typeof_step <- is.numeric(Linear_steps)
+    test_length_step <- length(Linear_steps) == 1
+    test_typeof_amount <- is.numeric(Reaction_amount)
+    test_length_amount <- length(Reaction_amount) == 1
+
+    if (all(test_typeof_step, test_typeof_amount,
+            test_length_step, test_length_amount) == FALSE) {
+      stop("When using linear steps in a reaction, both Reaction_amount and Linear_steps must be numeric vectors of length 1.")
+    } else {
+      Linear_steps <- as.integer(Linear_steps)
+      step_command <- paste0(Reaction_amount, " ",
+                             units, " in ",
+                             Linear_steps, " steps")
+    }
+  } else { #explicit step branch
+    if (is.numeric(Reaction_amount)) {
+      step_command <- c(paste0(Reaction_amount), paste0(" ", units))
+    } else {
+      stop("Reaction_amount must be a vector of type numeric")
+    }
+  }
+
+  components[[component_length + 1]] <- step_command
+
+  phr_input_section(type = "REACTION", number = .number, name = .name,
+                    components = components)
+
+}
