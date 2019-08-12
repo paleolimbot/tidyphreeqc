@@ -549,11 +549,13 @@ phr_end <- function() {
 phr_mix <- function(
   .number = 1,
   .name = "",
-  ...) {
-  phr_input_section("MIX",
-                    number = .number,
-                    name = .name,
-                    components = list(...)
+  ...
+  ) {
+  phr_input_section(
+    "MIX",
+    number = .number,
+    name = .name,
+    components = list(...)
   )
 }
 #' Specify a REACTION
@@ -604,7 +606,9 @@ phr_reaction <- function(
   .name = "",
   Reaction_amount,
   Linear_steps = NA,
-  units = "moles", ...) {
+  units = "moles",
+  ...
+  ) {
   components <- list(...)
   component_length <- length(components)
 
