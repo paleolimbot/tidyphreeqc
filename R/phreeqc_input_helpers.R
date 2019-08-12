@@ -525,3 +525,305 @@ as.character.phr_surface_item <- function(x, ...) {
 phr_end <- function() {
   phr_input_section("END")
 }
+
+
+#' Specify a MIX of solutions
+#'
+#' @param .number Number of the component
+#' @param .name Name of the component
+#' @param ... Further arguments
+#'
+#' @seealso
+#' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-27.htm#50528257_23725}
+#'
+#' @return A \link{phr_input_section}
+#' @export
+#'
+#' @examples
+#' solution_1 <- phr_solution(.number = 1, Na = 1, Cl = 1)
+#' solution_2 <- phr_solution(.number = 2, K = 1, Cl = 1)
+#'
+#' # Referring to SOLUTION ".number" in quotes
+#' phr_mix("1" = 0.25, "2" = 0.75)
+#'
+phr_mix <- function(
+  .number = 1,
+  .name = "",
+  ...) {
+  phr_input_section("MIX",
+                    number = .number,
+                    name = .name,
+                    components = list(...)
+  )
+}
+#' Specify a REACTION
+#'
+#' Define irreversible reactions that transfer a specified amount of elements
+#' into your SOLUTION during a batch reaction simulation.
+#'
+#' @param .number Number of the component
+#' @param .name Name of the component
+#' @param Reaction_amount Amount of components added per step
+#' @param Linear_steps Number of times a \code{Reaction_amount} shall be added
+#' @param units Character vector of length = 1. Either "moles", "millimoles" or "micromoles"
+#' @param ... Further arguments
+#'
+#' @details The steps at which components are added to the solution can be
+#' defined either explicitly or implicitly. For an explicit definition provide
+#' \code{Reaction_amoun} with a vector where each element refers to one
+#'  amount (in "units") at the step of the elements index. For the implicit
+#'  definition, \code{Reaction_amount} needs to be given as a single numeric and
+#'  \code{Linear_steps} is set to the number of times that amount is added to
+#'  the SOLUTION to cause a REACTION.
+#'
+#' @seealso
+#' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-33.htm#50528257_75635}
+#'
+#' @return A \link{phr_input_section}
+#' @export
+#'
+#' @examples
+#' #Explicit definition:
+#' phr_reaction(Anhydrite = 1, Reaction_amount = c(1, 1, 2, 2, 2, 8, 3),
+#'  units = "micromoles")
+#'
+#' #Implicit definition:
+#' phr_reaction(Pyrite = 1, Reaction_amount = 5,
+#' units = "millimoles", Linear_steps = 14)
+#'
+#' # PHREEQC accepts not only EQUILIBRIUM_PHASES but any formula composed of
+#' # defined SOLUTION_MASTER_SPECIES. It is up to you, however, to make sure
+#' # the reaction you specify does actually make sense. In a REACTION block
+#' # PHREEQC will dissolve anything, regardless of phase solubility
+#'
+#' phr_reaction(C8H18O = 1, Reaction_amount = 0.1, Linear_steps = 10)
+#'
+#'
+phr_reaction <- function(
+  .number = 1,
+  .name = "",
+  Reaction_amount,
+  Linear_steps = NA,
+  units = "moles", ...) {
+  components <- list(...)
+  component_length <- length(components)
+
+  if (units %in% c("moles", "millimoles", "micromoles") == FALSE) {
+    stop("Unrecognized units. Must be either moles, millimoles or micromoles.")
+  }
+
+  if (!is.na(Linear_steps)) {
+
+    # linear step branch
+    test_typeof_step <- is.numeric(Linear_steps)
+    test_length_step <- length(Linear_steps) == 1
+    test_typeof_amount <- is.numeric(Reaction_amount)
+    test_length_amount <- length(Reaction_amount) == 1
+
+    if (
+      all(
+        test_typeof_step,
+        test_typeof_amount,
+        test_length_step,
+        test_length_amount
+      ) == FALSE
+    ) {
+      stop("When using linear steps in a reaction, both Reaction_amount and Linear_steps must be numeric vectors of length 1.")
+    } else {
+      Linear_steps <- as.integer(Linear_steps)
+      step_command <- paste0(
+        Reaction_amount,
+        " ",
+        units,
+        " in ",
+        Linear_steps,
+        " steps"
+      )
+    }
+  } else {
+
+    # explicit step branch
+    if (is.numeric(Reaction_amount)) {
+      step_command <- c(paste0(Reaction_amount), paste0(" ", units))
+    } else {
+      stop("Reaction_amount must be a vector of type numeric")
+    }
+  }
+
+  components[[component_length + 1]] <- step_command
+
+  phr_input_section(
+    type = "REACTION",
+    number = .number,
+    name = .name,
+    components = components
+  )
+}
+
+#' fix pH or pe of a reaction
+#'
+#' While you can state the initial pH and pe of a SOLUTION at its definition,
+#' during a reaction, e.g. with an EQUILIBRIUM_PHASE, these initial conditions
+#' can (will!) change. This does not always match the true behavior of the
+#' system that the modeller is trying to depict. Sometimes the pH and/or pe
+#' of a system are supposed to be held at a constant value. PHREEQC does not
+#' come with a build-in way of fixing pe/pH, but the
+#' \href{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final.html}{User's guide to PHREEQC}
+#' provides something of an official workaround by defining pseudo-phases
+#' capable of locking pH or pe at defined values. The functions described here
+#' provide practical shortcuts to these workarounds.
+#'
+#' @param pH The desired final pH-value of the solution
+#' @param pe The desired final pe-value of the solution
+#' @param number The number of the component
+#' @param name The name of the component
+#' @param formula The chemical formula that is added or substractet from the solution until the desired equilibrium conditions are reached
+#' @param amount The amount of the species defined by \code{formula} available to try to reach desired equilibrium conditions
+#'
+#' @details The theory behind \code{pe_fix} and \code{pH_fix} is, that the
+#' presence of an additional phase controls the pe/pH of a system by reaction.
+#' For example: if \code{phr_pH_fix} is called with default \code{formula = HCl}
+#' in a simulation, PHREEQC will add or substract \href{https://en.wikipedia.org/wiki/Hydrochloric_acid}{Hydrochloric acid}
+#' to or from your system, until the specified pH is reached. Note that this
+#' will likely modify the amount of Cl in your system. Make sure this does not
+#' affect the implications of your results! It is possible to use any
+#' chemical to control pH/pe, e.g. switching from HCl to NaOH or from O2 to NaMnO4,
+#' as long as the Elements involved are defined as SOLUTION_MASTER_SPECIES.
+#'
+#' Becaue \code{pe_fix} and \code{pH_fix} rely on the equilibration with
+#' pseudo-species, they have to be defined in a PHASES block first, either in your
+#' Database or in your PHREEQC-programm. This can be done via calls to
+#' \code{phr_pH_fix_definition} and \code{phr_pe_fix_definition}. See the
+#' examples section dor details on the implementation.
+#'
+#' @seealso
+#' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-77.html#pgfId-338379}
+#'
+#' @return A \link{phr_input_section}
+#' @export
+#'
+#' @examples
+#' # Fixing pH
+#' sol <- phr_solution(pH = 7)
+#' pH_def <- phr_pH_fix_definition()
+#' pH_set <- phr_pH_fix(pH = 3)
+#' sel <- phr_selected_output(pH = TRUE)
+#'
+#' res_pH <- phr_run(
+#'   phr_input(sol, pH_def, pH_set, sel)
+#' ) %>%
+#' tibble::as_tibble()
+#'
+#' res_pH[res_pH$state == "react", "pH"]
+#'
+#' # Fixing pe
+#' sol <- phr_solution(pe = 2)
+#' pe_def <- phr_pe_fix_definition()
+#' pe_set <- phr_pe_fix(pe = 8)
+#' sel <- phr_selected_output(pe = TRUE)
+#'
+#' res_pe <- phr_run(
+#'   phr_input(sol, pe_def, pe_set, sel)
+#' ) %>%
+#' tibble::as_tibble()
+#'
+#' res_pe[res_pe$state == "react", "pe"]
+#'
+#' # When there is more than one EQUILIBRIUM_PHASE in one simulation run,
+#' # all have to be defined in the same EQUILIBRIUM_PHASE block. Thus, the
+#' # shortcut-functions who provide a one-phase-only block wont work. In this
+#' # case, define your pe_fix and pH-fix directly inside your call to
+#' # phr_equilibrium_phases(). Keep an eye on the negative prefix, though!
+#'
+#' sol <-  phr_solution(pH = 7, pe = 4)
+#' # You still need to define the pseudo-phases
+#' pH_def <- phr_pH_fix_definition()
+#' pe_def <- phr_pe_fix_definition()
+#'
+#' phases <- phr_equilibrium_phases(
+#'  Calcite = c(0, 0.001), # somewhat alkaline phase
+#'  Fix_pH = c("-3", "HCl", "10"), # -3 --> pH = 3
+#'  Fix_pe = c("-8", "O2", "10") # -8 --> pe = 8
+#' )
+#' sel <- phr_selected_output(pH = TRUE, pe = TRUE)
+#' res_multi <- phr_run(
+#'   phr_input(sol, pH_def, pe_def, phases, sel)
+#' ) %>%
+#' tibble::as_tibble()
+#'
+#' res_multi[res_pe$state == "react", c("pH", "pe")]
+
+phr_pH_fix_definition <- function() {
+  phr_input_section(
+    type = "PHASES",
+    components = list(
+      "Fix_pH",
+      "H+ = H+",
+      "log_K 0.0"
+    )
+  )
+}
+
+#' @rdname phr_pH_fix_definition
+#' @export
+phr_pe_fix_definition <- function(){
+  phr_input_section(
+    type = "PHASES",
+    components = list(
+      "Fix_pe",
+      "e- = e-",
+      "log_K 0.0"
+    )
+  )
+}
+
+#' @rdname phr_pH_fix_definition
+#' @export
+phr_pH_fix <- function(
+  pH,
+  number = NA,
+  name = "",
+  formula = "HCl",
+  amount = 10) {
+  phr_input_section(
+    "EQUILIBRIUM_PHASES",
+    number = number,
+    name = name,
+    components = list(
+      paste0(
+        "Fix_pH",
+        " ",
+        pH * -1,
+        " ",
+        formula,
+        " ",
+        amount
+      )
+    )
+  )
+}
+#' @rdname phr_pH_fix_definition
+#' @export
+phr_pe_fix <- function(
+  pe,
+  number = NA,
+  name = "",
+  formula = "O2",
+  amount = 10) {
+  phr_input_section(
+    "EQUILIBRIUM_PHASES",
+    number = number,
+    name = name,
+    components = list(
+      paste0(
+        "Fix_pe",
+        " ",
+        pe * -1,
+        " ",
+        formula,
+        " ",
+        amount
+      )
+    )
+  )
+}
