@@ -13,23 +13,23 @@ test_that("pqi_write accepts phr_input only", {
 
 test_that("detect_keyword lives up to its name", {
 
-  expect_true(tidyphreeqc:::phr_detect_keyword("MIX"))
-  expect_true(tidyphreeqc:::phr_detect_keyword("SOLUTION"))
-  expect_true(tidyphreeqc:::phr_detect_keyword("SIT"))
-  expect_false(tidyphreeqc:::phr_detect_keyword("sit"))
-  expect_false(tidyphreeqc:::phr_detect_keyword("HOFFNUNG"))
+  expect_true(phr_detect_keyword("MIX"))
+  expect_true(phr_detect_keyword("SOLUTION"))
+  expect_true(phr_detect_keyword("SIT"))
+  expect_false(phr_detect_keyword("sit"))
+  expect_false(phr_detect_keyword("HOFFNUNG"))
 })
 
 test_that("detect_keyword outputs a logical of input length", {
 
-  expect_length(tidyphreeqc:::phr_detect_keyword("MIX"), 1)
-  expect_length(tidyphreeqc:::phr_detect_keyword(c("SURFACE", "TRANSPORT")), 2)
+  expect_length(phr_detect_keyword("MIX"), 1)
+  expect_length(phr_detect_keyword(c("SURFACE", "TRANSPORT")), 2)
 
   test_keywords <- c("EXCHANGE", "PHASES", "EQUILIBRIUM_PHASES")
 
-  expect_length(tidyphreeqc:::phr_detect_keyword(test_keywords), 3)
-  expect_length(tidyphreeqc:::phr_detect_keyword(test_keywords), length(test_keywords))
-  expect_true(is.logical(tidyphreeqc:::phr_detect_keyword(test_keywords)))
+  expect_length(phr_detect_keyword(test_keywords), 3)
+  expect_length(phr_detect_keyword(test_keywords), length(test_keywords))
+  expect_true(is.logical(phr_detect_keyword(test_keywords)))
 })
 
 test_that("read_pqi works as intended", {
@@ -71,7 +71,7 @@ test_that("read_pqi works as intended", {
   expect_s3_class(phr_read_pqi(fil), "phr_input")
   expect_length(phr_read_pqi(fil), length(phr_input(sol, pH_def, eqp, sel)))
   expect_error(phr_read_pqi(c("THIS", "IS", "NO", "VALID", "INPUT")))
-  expect_error(tidyphreeqc:::phr_tidy_PHREEQC(
+  expect_error(phr_tidy_PHREEQC(
     c("PARTIALLY", "CORRECT", "INPUT", "IS", "NO", "SOLUTION")
   ))
 
