@@ -207,11 +207,4 @@ phr_tidy_PHREEQC <- function(x){
   result <- do.call("phr_input", sections) #gotta love do.call
   return(result)
 
-  purrr::walk(output,
-              write,
-              file = path,
-              ncolumns = 1,
-              append = TRUE,
-              sep = "\n")
-
 }
