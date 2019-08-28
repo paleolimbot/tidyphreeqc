@@ -10,11 +10,11 @@ phr_read_pqi(path)
 \item{path}{Path to file.}
 }
 \value{
-An object of class \code{\link{phr_input}}
+An object of class \code{\link[=phr_input]{phr_input()}}
 }
 \description{
-load .pqi-files produced by the PHREEQC-interactive GUI into
-the tidyphreeqc format \code{\link{phr_input}}
+Load .pqi-files produced by the PHREEQC-interactive GUI into
+the tidyphreeqc format \code{\link[=phr_input]{phr_input()}}
 }
 \examples{
 # create some phr_input_sections

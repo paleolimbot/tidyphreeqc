@@ -5,11 +5,11 @@
 \alias{phr_reaction_pressure}
 \title{Specify a reaction temperature, pressure gradient}
 \usage{
-phr_reaction_temperature(.number = 1, low = 0, high = 100, steps = 10,
-  values = NULL)
+phr_reaction_temperature(.number = 1, low = 0, high = 100,
+  steps = 10, values = NULL)
 
-phr_reaction_pressure(.number = 1, low = 0.5, high = 1.5, steps = 10,
-  values = NULL)
+phr_reaction_pressure(.number = 1, low = 0.5, high = 1.5,
+  steps = 10, values = NULL)
 }
 \arguments{
 \item{.number}{The number of the gradient}

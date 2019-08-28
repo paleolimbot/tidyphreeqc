@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-tidyphreeqc
-===========
 
-The goal of tidyphreeqc is to provide a more useful interface to the existing phreeqc package.
+# tidyphreeqc
 
-Installation
-------------
+The goal of tidyphreeqc is to provide a more useful interface to the
+existing phreeqc package.
+
+## Installation
 
 You can install tidyphreeqc from github with:
 
@@ -15,10 +15,14 @@ You can install tidyphreeqc from github with:
 devtools::install_github("paleolimbot/tidyphreeqc")
 ```
 
-Example
--------
+## Example
 
-Running PHREEQC is accomplished using the `phr_run()` function, which calls the program and generates the output. The function accepts character vectors of input, which can be generated using intput helper functions such as `phr_solution()`, `phr_selected_output()`, `phr_equilibrium_phases()`, and `phr_reaction_temperature()` (or roll your own input using `phr_input_section()`).
+Running PHREEQC is accomplished using the `phr_run()` function, which
+calls the program and generates the output. The function accepts
+character vectors of input, which can be generated using intput helper
+functions such as `phr_solution()`, `phr_selected_output()`,
+`phr_equilibrium_phases()`, and `phr_reaction_temperature()` (or roll
+your own input using `phr_input_section()`).
 
 ``` r
 library(tidyphreeqc)
@@ -27,10 +31,11 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 0 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b6d51ce75'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file139659a589e3'
 ```
 
-To get the results as a data frame, we need to supply a `phr_selected_output()` to the input file.
+To get the results as a data frame, we need to supply a
+`phr_selected_output()` to the input file.
 
 ``` r
 phr_run(
@@ -39,17 +44,18 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b66f90f0f'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file139665a0f7f9'
 #> as_tibble():
 #> # A tibble: 1 x 13
-#>   selected_output   sim state   soln dist_x  time  step    pH    pe
-#>   <chr>           <int> <chr>  <int>  <dbl> <dbl> <int> <dbl> <dbl>
-#> 1 n1                  1 i_soln     1     NA    NA    NA  7.00  4.00
-#> # ... with 4 more variables: `temp(C)` <dbl>, `la_OH-` <dbl>,
-#> #   `la_H+` <dbl>, la_O2 <dbl>
+#>   selected_output   sim state  soln dist_x  time  step    pH    pe
+#>   <chr>           <int> <chr> <int>  <dbl> <dbl> <int> <dbl> <dbl>
+#> 1 n1                  1 i_so…     1     NA    NA    NA     7     4
+#> # … with 4 more variables: `temp(C)` <dbl>, `la_OH-` <dbl>, `la_H+` <dbl>,
+#> #   la_O2 <dbl>
 ```
 
-To find the distribution of a few solutions, you can generate a list of solutions using `phr_solution_list()`.
+To find the distribution of a few solutions, you can generate a list of
+solutions using `phr_solution_list()`.
 
 ``` r
 phr_run(
@@ -58,29 +64,31 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b71f60cd0'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file1396c3c1253'
 #> as_tibble():
 #> # A tibble: 56 x 13
-#>    selected_output   sim state   soln dist_x  time  step    pH    pe
-#>    <chr>           <int> <chr>  <int>  <dbl> <dbl> <int> <dbl> <dbl>
-#>  1 n1                  1 i_soln     1     NA    NA    NA  5.00     0
-#>  2 n1                  1 i_soln     2     NA    NA    NA  6.00     0
-#>  3 n1                  1 i_soln     3     NA    NA    NA  7.00     0
-#>  4 n1                  1 i_soln     4     NA    NA    NA  8.00     0
-#>  5 n1                  1 i_soln     5     NA    NA    NA  5.00     0
-#>  6 n1                  1 i_soln     6     NA    NA    NA  6.00     0
-#>  7 n1                  1 i_soln     7     NA    NA    NA  7.00     0
-#>  8 n1                  1 i_soln     8     NA    NA    NA  8.00     0
-#>  9 n1                  1 i_soln     9     NA    NA    NA  5.00     0
-#> 10 n1                  1 i_soln    10     NA    NA    NA  6.00     0
-#> # ... with 46 more rows, and 4 more variables: `temp(C)` <dbl>,
+#>    selected_output   sim state  soln dist_x  time  step    pH    pe
+#>    <chr>           <int> <chr> <int>  <dbl> <dbl> <int> <dbl> <dbl>
+#>  1 n1                  1 i_so…     1     NA    NA    NA     5     4
+#>  2 n1                  1 i_so…     2     NA    NA    NA     6     4
+#>  3 n1                  1 i_so…     3     NA    NA    NA     7     4
+#>  4 n1                  1 i_so…     4     NA    NA    NA     8     4
+#>  5 n1                  1 i_so…     5     NA    NA    NA     5     4
+#>  6 n1                  1 i_so…     6     NA    NA    NA     6     4
+#>  7 n1                  1 i_so…     7     NA    NA    NA     7     4
+#>  8 n1                  1 i_so…     8     NA    NA    NA     8     4
+#>  9 n1                  1 i_so…     9     NA    NA    NA     5     4
+#> 10 n1                  1 i_so…    10     NA    NA    NA     6     4
+#> # … with 46 more rows, and 4 more variables: `temp(C)` <dbl>,
 #> #   `la_OH-` <dbl>, `la_H+` <dbl>, la_O2 <dbl>
 ```
 
-Databases
----------
+## Databases
 
-Some elements (for example, mercury) aren't included in the base database. There are a number of databases included in the PHREEQC package, that you can choose by specifying the `db` argument of `phr_run()`. One that includes mercury is the "minteq" database.
+Some elements (for example, mercury) aren’t included in the base
+database. There are a number of databases included in the PHREEQC
+package, that you can choose by specifying the `db` argument of
+`phr_run()`. One that includes mercury is the “minteq” database.
 
 ``` r
 phr_run(
@@ -92,18 +100,17 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b4c66ad41'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file139623b20a7e'
 #> as_tibble():
 #> # A tibble: 1 x 14
-#>   selected_output   sim state   soln dist_x  time  step    pH    pe la_Hg
-#>   <chr>           <int> <chr>  <int>  <dbl> <dbl> <int> <dbl> <dbl> <dbl>
-#> 1 n1                  1 i_soln     1     NA    NA    NA  7.00  4.00 -4.00
-#> # ... with 4 more variables: `la_Hg2+2` <dbl>, `la_Hg(OH)2` <dbl>,
+#>   selected_output   sim state  soln dist_x  time  step    pH    pe la_Hg
+#>   <chr>           <int> <chr> <int>  <dbl> <dbl> <int> <dbl> <dbl> <dbl>
+#> 1 n1                  1 i_so…     1     NA    NA    NA     7     4 -4.00
+#> # … with 4 more variables: `la_Hg2+2` <dbl>, `la_Hg(OH)2` <dbl>,
 #> #   `la_HgOH+` <dbl>, `la_Hg(OH)3-` <dbl>
 ```
 
-Pourbaix diagrams
------------------
+## Pourbaix diagrams
 
 ``` r
 result <- phr_run(
@@ -117,33 +124,36 @@ result <- phr_run(
 result
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpXu41o3/file365b1e4c88b1'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file13961b026c07'
 #> as_tibble():
 #> # A tibble: 1,189 x 14
-#>    selected_output   sim state   soln dist_x  time  step    pH    pe la_Hg
-#>    <chr>           <int> <chr>  <int>  <dbl> <dbl> <int> <dbl> <dbl> <dbl>
-#>  1 n1                  1 i_soln     1     NA    NA    NA  14.0 -13.5 -3.92
-#>  2 n1                  1 i_soln     2     NA    NA    NA  13.5 -13.0 -3.98
-#>  3 n1                  1 i_soln     3     NA    NA    NA  14.0 -13.0 -3.92
-#>  4 n1                  1 i_soln     4     NA    NA    NA  13.0 -12.5 -3.99
-#>  5 n1                  1 i_soln     5     NA    NA    NA  13.5 -12.5 -3.98
-#>  6 n1                  1 i_soln     6     NA    NA    NA  14.0 -12.5 -3.92
-#>  7 n1                  1 i_soln     7     NA    NA    NA  12.5 -12.0 -4.00
-#>  8 n1                  1 i_soln     8     NA    NA    NA  13.0 -12.0 -3.99
-#>  9 n1                  1 i_soln     9     NA    NA    NA  13.5 -12.0 -3.98
-#> 10 n1                  1 i_soln    10     NA    NA    NA  14.0 -12.0 -3.92
-#> # ... with 1,179 more rows, and 4 more variables: `la_Hg2+2` <dbl>,
+#>    selected_output   sim state  soln dist_x  time  step    pH    pe la_Hg
+#>    <chr>           <int> <chr> <int>  <dbl> <dbl> <int> <dbl> <dbl> <dbl>
+#>  1 n1                  1 i_so…     1     NA    NA    NA  14   -13.5 -3.92
+#>  2 n1                  1 i_so…     2     NA    NA    NA  13.5 -13   -3.98
+#>  3 n1                  1 i_so…     3     NA    NA    NA  14   -13   -3.92
+#>  4 n1                  1 i_so…     4     NA    NA    NA  13   -12.5 -3.99
+#>  5 n1                  1 i_so…     5     NA    NA    NA  13.5 -12.5 -3.98
+#>  6 n1                  1 i_so…     6     NA    NA    NA  14   -12.5 -3.92
+#>  7 n1                  1 i_so…     7     NA    NA    NA  12.5 -12   -4.00
+#>  8 n1                  1 i_so…     8     NA    NA    NA  13   -12   -3.99
+#>  9 n1                  1 i_so…     9     NA    NA    NA  13.5 -12   -3.98
+#> 10 n1                  1 i_so…    10     NA    NA    NA  14   -12   -3.92
+#> # … with 1,179 more rows, and 4 more variables: `la_Hg2+2` <dbl>,
 #> #   `la_Hg(OH)2` <dbl>, `la_HgOH+` <dbl>, `la_Hg(OH)3-` <dbl>
 ```
 
 ``` r
 library(tidyverse)
-#> ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
-#> ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
-#> ✔ tibble  1.4.2     ✔ dplyr   0.7.4
-#> ✔ tidyr   0.7.2     ✔ stringr 1.3.0
-#> ✔ readr   1.1.1     ✔ forcats 0.2.0
-#> ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> Registered S3 method overwritten by 'rvest':
+#>   method            from
+#>   read_xml.response xml2
+#> ── Attaching packages ───────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+#> ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
+#> ✔ tibble  2.1.3     ✔ dplyr   0.8.1
+#> ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+#> ✔ readr   1.3.1     ✔ forcats 0.4.0
+#> ── Conflicts ──────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
 #> ✖ dplyr::lag()    masks stats::lag()
 result_long <- result %>%
@@ -158,7 +168,7 @@ result_long %>%
   facet_wrap(~species)
 ```
 
-![](README-pourbaix-1.png)
+![](README-pourbaix-1.png)<!-- -->
 
 ``` r
 
@@ -174,4 +184,4 @@ result_long %>%
   geom_point()
 ```
 
-![](README-pourbaix-2.png)
+![](README-pourbaix-2.png)<!-- -->

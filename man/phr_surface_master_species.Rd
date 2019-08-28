@@ -12,14 +12,13 @@ only lowercase letters afterward (e.g., Mysurface). An underscore will denote an
 surface (e.g., Mysurface_one).}
 
 \item{master_species}{The formula for the binding site. This is generall the binding site name
-followed by OH (e.g., MysurfaceOH), in what the documentation calls the "OH-form of the binding site).}
-}
-\value{
-A \link{phr_input_section}.
+followed by OH (e.g., MysurfaceOH), in what the documentation calls the "OH-form of the binding site).
+
+A \code{\link[=phr_input_section]{phr_input_section()}}.}
 }
 \description{
 Defines a surface and a binding site on that surface (separated by an underscore). An identity
-reaction with a log_k of 0 must be included in a \link{phr_surface_species} block.
+reaction with a log_k of 0 must be included in a \code{\link[=phr_surface_species]{phr_surface_species()}} block.
 }
 \examples{
 phr_input(

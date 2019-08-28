@@ -9,34 +9,38 @@ phr_solution_master_species(element_name, master_species, alkalinity = 0,
   element_gram_formula_weight = NA)
 }
 \arguments{
-\item{element_name}{An element name (e.g., As). Can also have a valence state (e.g., Hg(2)).
-If it does have a valence state, the original element must already be defined as a
-phr_solution_master_species. This is the name that will get used to specify concentrations in
-\link{phr_solution}. Can be any name that starts with a capital letter (e.g., "EDTA").}
+\item{element_name}{An element name (e.g., As). Can also have a valence state
+(e.g., Hg(2)). If it does have a valence state, the original element must
+already be defined as a phr_solution_master_species. This is the name that
+will get used to specify concentrations in \code{\link[=phr_solution]{phr_solution()}}. Can be any
+name that starts with a capital letter (e.g., "EDTA").}
 
-\item{master_species}{The representative species of the element. This is the name that will end up in
-a \link{phr_solution_species} reaction (or any other reaction).}
+\item{master_species}{The representative species of the element. This is the
+name that will end up in a \code{\link[=phr_solution_species]{phr_solution_species()}} reaction (or any other
+reaction).}
 
 \item{alkalinity}{The contribution of this species to Alkalinity.}
 
-\item{gram_formula_weight}{Weight used for unit conversion from the master species.
-Usually this is the gram formula weight of the element (safest bet), not of the dominant aequeous species.
-The exception of this appears to be SO4 in the databases.
-Use NA to calculate automatically; use NULL to omit.}
+\item{gram_formula_weight}{Weight used for unit conversion from the master
+species. Usually this is the gram formula weight of the element (safest
+bet), not of the dominant aequeous species. The exception of this appears
+to be SO4 in the databases. Use NA to calculate automatically; use NULL to
+omit.}
 
-\item{element_gram_formula_weight}{Weight used for unit conversion from the element.
-Use NA to calculate automatically; use NULL to omit.}
-}
-\value{
-A \link{phr_input_section}.
+\item{element_gram_formula_weight}{Weight used for unit conversion from the
+element. Use NA to calculate automatically; use NULL to omit.
+
+A \code{\link[=phr_input_section]{phr_input_section()}}.}
 }
 \description{
-Most master species are defined in the databases. Some are not (e.g., Hg in the default database),
-and require specification in the input. This is also a good way to specify components of
-a solution that do not dissociate (e.g., Cyanide in the minteq database). Solution master
-species must have an associated \link{phr_solution_species} identity reaction (e.g., Hg+2 = Hg+2).
-The identity reaction must have a log_k of 0, but can specify other parameters such as gamma
-(relationship between activity, concentration, and ionic strength).
+Most master species are defined in the databases. Some are not (e.g., Hg in
+the default database), and require specification in the input. This is also a
+good way to specify components of a solution that do not dissociate (e.g.,
+Cyanide in the minteq database). Solution master species must have an
+associated \code{\link[=phr_solution_species]{phr_solution_species()}} identity reaction (e.g., Hg+2 = Hg+2).
+The identity reaction must have a log_k of 0, but can specify other
+parameters such as gamma (relationship between activity, concentration, and
+ionic strength).
 }
 \examples{
 # define Hg as a species assuming it is Hg+2 in solution.

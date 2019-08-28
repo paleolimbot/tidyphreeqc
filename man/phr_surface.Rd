@@ -14,37 +14,40 @@ phr_surface_item(sites, specific_area_per_gram = NULL, grams = NULL,
 \arguments{
 \item{.number, .name}{Identifiers for this surface}
 
-\item{...}{One or more phr_surface_item() objects or key/value pairs added to the block. Surface items
-should be in the form binding_site_name = phr_surface_item(...) (where binding_site_name
-is defined in \link{phr_surface_master_species}).}
+\item{...}{One or more phr_surface_item() objects or key/value pairs added to
+the block. Surface items should be in the form binding_site_name =
+phr_surface_item(...) (where binding_site_name is defined in
+\code{\link[=phr_surface_master_species]{phr_surface_master_species()}}).}
 
-\item{equilibrate}{A \link{phr_solution} number with which this surface should equilibrate. Defaults to 1.}
+\item{equilibrate}{A \code{\link[=phr_solution]{phr_solution()}} number with which this surface should
+equilibrate. Defaults to 1.}
 
-\item{sites_units}{Either absolute (sites speciried in moles) or density (sites specified in sites/ng).}
+\item{sites_units}{Either absolute (sites speciried in moles) or density
+(sites specified in sites/ng).}
 
-\item{sites}{The number of sites in moles (if sites_units is "absolute"), or the density of sites in
-sites / square nanometer (if sites_units is "density").}
+\item{sites}{The number of sites in moles (if sites_units is "absolute"), or
+the density of sites in sites / square nanometer (if sites_units is
+"density").}
 
-\item{specific_area_per_gram}{Area of the surface per gram, in square meters / gram}
+\item{specific_area_per_gram}{Area of the surface per gram, in square meters
+/ gram}
 
 \item{grams}{The number of grams, for specific area calculation}
 
-\item{diffusion_coefficient}{The diffusion coefficient in square meters / second, which
-applies in a TRANSPORT calculation to make the surface transport in space (like a colloid
-rather than an immobile surface).}
-}
-\value{
-A \link{phr_input_section}
+\item{diffusion_coefficient}{The diffusion coefficient in square meters /
+second, which applies in a TRANSPORT calculation to make the surface
+transport in space (like a colloid rather than an immobile surface).}
 }
 \description{
-Surface specification happens in three places: \link{phr_surface_master_species}, which
-defines the binding site names, \link{phr_surface_species}, which defines the log_k values
-for the binding of solution species to the site, and this function, which defines the number
-and density of binding sites (defined in \link{phr_surface_master_species}) that exist in
-the solution specified by the 'equilibrate' parameter. It is worth noting that "hydrous
-ferric oxide" (Hfo) are included in the main (and several other) databases, including
-log_k values for many metals with this surface. These are split into the strong (Hfo_s)
-and weak (Hfo_w) sites.
+Surface specification happens in three places:
+\code{\link[=phr_surface_master_species]{phr_surface_master_species()}}, which defines the binding site names,
+\code{\link[=phr_surface_species]{phr_surface_species()}}, which defines the log_k values for the binding of
+solution species to the site, and this function, which defines the number and
+density of binding sites (defined in \code{\link[=phr_surface_master_species]{phr_surface_master_species()}}) that
+exist in the solution specified by the 'equilibrate' parameter. It is worth
+noting that "hydrous ferric oxide" (Hfo) are included in the main (and
+several other) databases, including log_k values for many metals with this
+surface. These are split into the strong (Hfo_s) and weak (Hfo_w) sites.
 }
 \examples{
 # specify a hydrous ferric oxide surface and see if there is any sorption by Zn
@@ -64,4 +67,6 @@ phr_input(
 }
 \seealso{
 \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-45.htm}
+
+A \code{\link[=phr_input_section]{phr_input_section()}}
 }

@@ -20,9 +20,6 @@ phr_reaction(.number = 1, .name = "", Reaction_amount,
 
 \item{...}{Further arguments}
 }
-\value{
-A \link{phr_input_section}
-}
 \description{
 Define irreversible reactions that transfer a specified amount of elements
 into your SOLUTION during a batch reaction simulation.
@@ -30,11 +27,11 @@ into your SOLUTION during a batch reaction simulation.
 \details{
 The steps at which components are added to the solution can be
 defined either explicitly or implicitly. For an explicit definition provide
-\code{Reaction_amoun} with a vector where each element refers to one
- amount (in "units") at the step of the elements index. For the implicit
- definition, \code{Reaction_amount} needs to be given as a single numeric and
- \code{Linear_steps} is set to the number of times that amount is added to
- the SOLUTION to cause a REACTION.
+\code{Reaction_amount} with a vector where each element refers to one
+amount (in "units") at the step of the elements index. For the implicit
+definition, \code{Reaction_amount} needs to be given as a single numeric and
+\code{Linear_steps} is set to the number of times that amount is added to
+the SOLUTION to cause a REACTION.
 }
 \examples{
 #Explicit definition:
@@ -56,4 +53,6 @@ phr_reaction(C8H18O = 1, Reaction_amount = 0.1, Linear_steps = 10)
 }
 \seealso{
 \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-33.htm#50528257_75635}
+
+A \code{\link[=phr_input_section]{phr_input_section()}}
 }

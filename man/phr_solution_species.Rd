@@ -14,21 +14,21 @@ phr_surface_species(reaction, log_k = NULL, delta_h = NULL,
 \arguments{
 \item{reaction}{The formation reaction of the species, e.g.: \code{CO3-2 + H+ = HCO3-}.}
 
-\item{log_k}{The equilibrium coefficient of the reaction at 25 degrees C. Alternatively can be specified
-for all temperatures using \code{analytical_expression}.}
+\item{log_k}{The equilibrium coefficient of the reaction at 25 degrees C.
+Alternatively can be specified for all temperatures using
+\code{analytical_expression}.}
 
-\item{delta_h}{The enthalpy of reaction, in kJ/mol (or with defined units). Used to determine the
-temperature dependence of K according to the Van't-Hoff equation, if \code{analytical_expression}
-is not provided.}
+\item{delta_h}{The enthalpy of reaction, in kJ/mol (or with defined units).
+Used to determine the temperature dependence of K according to the
+Van't-Hoff equation, if \code{analytical_expression} is not provided.}
 
-\item{analytical_expression}{Identifier for coefficients for an analytical expression for the
-temperature dependence of log K. Must be a vector of six numeric values:
-\code{A1 + A2*T + A3/T + A4*log10(T) + A5 / T^2 + A6*T^2}.}
+\item{analytical_expression}{Identifier for coefficients for an analytical
+expression for the temperature dependence of log K. Must be a vector of six
+numeric values: \code{A1 + A2*T + A3/T + A4*log10(T) + A5 / T^2 + A6*T^2}.}
 
-\item{...}{Further arguments in the input block}
-}
-\value{
-A \link{phr_input_section}
+\item{...}{Further arguments in the input block
+
+A \code{\link[=phr_input_section]{phr_input_section()}}}
 }
 \description{
 Define a solution/surface species

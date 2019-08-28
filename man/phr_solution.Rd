@@ -13,9 +13,6 @@ phr_solution(.number = 1, .name = "", ...)
 
 \item{...}{Further arguments}
 }
-\value{
-A \link{phr_input_section}
-}
 \description{
 Sepcify a solution
 }
@@ -26,4 +23,6 @@ phr_solution(pH = 5.5, pe = 0)
 }
 \seealso{
 \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-41.htm#50528257_30253}
+
+A \code{\link[=phr_input_section]{phr_input_section()}}
 }

@@ -23,43 +23,44 @@ phr_pe_fix(pe, number = NA, name = "", formula = "O2", amount = 10)
 
 \item{name}{The name of the component}
 
-\item{formula}{The chemical formula that is added or substractet from the solution until the desired equilibrium conditions are reached}
+\item{formula}{The chemical formula that is added or substractet from the
+solution until the desired equilibrium conditions are reached}
 
-\item{amount}{The amount of the species defined by \code{formula} available to try to reach desired equilibrium conditions}
+\item{amount}{The amount of the species defined by \code{formula} available to try
+to reach desired equilibrium conditions}
 
 \item{pe}{The desired final pe-value of the solution}
 }
 \value{
-A \link{phr_input_section}
+A \code{\link[=phr_input_section]{phr_input_section()}}
 }
 \description{
 While you can state the initial pH and pe of a SOLUTION at its definition,
 during a reaction, e.g. with an EQUILIBRIUM_PHASE, these initial conditions
 can (will!) change. This does not always match the true behavior of the
-system that the modeller is trying to depict. Sometimes the pH and/or pe
-of a system are supposed to be held at a constant value. PHREEQC does not
-come with a build-in way of fixing pe/pH, but the
-\href{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final.html}{User's guide to PHREEQC}
+system that the modeller is trying to depict. Sometimes the pH and/or pe of a
+system are supposed to be held at a constant value. PHREEQC does not come
+with a build-in way of fixing pe/pH, but the \href{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final.html}{User's guide to PHREEQC}
 provides something of an official workaround by defining pseudo-phases
 capable of locking pH or pe at defined values. The functions described here
 provide practical shortcuts to these workarounds.
 }
 \details{
-The theory behind \code{pe_fix} and \code{pH_fix} is, that the
-presence of an additional phase controls the pe/pH of a system by reaction.
-For example: if \code{phr_pH_fix} is called with default \code{formula = HCl}
-in a simulation, PHREEQC will add or substract \href{https://en.wikipedia.org/wiki/Hydrochloric_acid}{Hydrochloric acid}
-to or from your system, until the specified pH is reached. Note that this
-will likely modify the amount of Cl in your system. Make sure this does not
-affect the implications of your results! It is possible to use any
-chemical to control pH/pe, e.g. switching from HCl to NaOH or from O2 to NaMnO4,
-as long as the Elements involved are defined as SOLUTION_MASTER_SPECIES.
+The theory behind \code{pe_fix} and \code{pH_fix} is, that the presence of an
+additional phase controls the pe/pH of a system by reaction. For example: if
+\code{phr_pH_fix} is called with default \code{formula = HCl} in a simulation, PHREEQC
+will add or substract \href{https://en.wikipedia.org/wiki/Hydrochloric_acid}{Hydrochloric acid} to or from your
+system, until the specified pH is reached. Note that this will likely modify
+the amount of Cl in your system. Make sure this does not affect the
+implications of your results! It is possible to use any chemical to control
+pH/pe, e.g. switching from HCl to NaOH or from O2 to NaMnO4, as long as the
+Elements involved are defined as SOLUTION_MASTER_SPECIES.
 
-Becaue \code{pe_fix} and \code{pH_fix} rely on the equilibration with
-pseudo-species, they have to be defined in a PHASES block first, either in your
-Database or in your PHREEQC-programm. This can be done via calls to
-\code{phr_pH_fix_definition} and \code{phr_pe_fix_definition}. See the
-examples section dor details on the implementation.
+Becaue \code{pe_fix} and \code{pH_fix} rely on the equilibration with pseudo-species,
+they have to be defined in a PHASES block first, either in your Database or
+in your PHREEQC-programm. This can be done via calls to
+\code{\link[=phr_pH_fix_definition]{phr_pH_fix_definition()}} and \code{\link[=phr_pe_fix_definition]{phr_pe_fix_definition()}}. See the examples
+section dor details on the implementation.
 }
 \examples{
 # Fixing pH

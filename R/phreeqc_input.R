@@ -86,9 +86,8 @@ phr_input_section <- function(type, number = NA, name = "", components = list())
   }
 
   # check number input
-  number <- as.integer(number)
-  if(!is.integer(number) || (length(number) != 1)) {
-    stop("'number' must be a numeric vector of length 1")
+  if(length(number) != 1) {
+    stop("'number' must be a vector of length 1")
   }
 
   # number or name as "NA" means don't include

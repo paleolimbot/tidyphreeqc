@@ -1,38 +1,34 @@
-#'Write phr_input_sections to file
-#'
-#'@description write your phr_input generated in tidyphreeqc to
-#'.pqi files readily interpretable by the widely used PHREEQC-Interactive GUI
-#'provided by the USGS to share your models with colleagues.
-#'@param x An object of class "phr_input". See \link{phr_input} for details
-#'@param path Path to file.
-#'
-#'@details The path supplied to the function might typically look something
-#'like this: "~/path/to/my_program.pqi" but note that the ".pqi" ending is
-#'strictly optional and any (or no) file-ending is accepted. However, in order
-#'to be automatically recognised by the PHREEQC-Interactive GUI as a
-#'PHREEQC-input file, the ".pqi" ending is necessary.
-#'
-#'@examples
-#'# create some phr_input_sections
-#'sol <- phr_solution(pH = 8, pe = 2, Na = 1, Cl = 1, units = "mol/l")
-#'phase <- phr_equilibrium_phases(Halite = c(10, 1))
-#'
-#'fil <- tempfile("data")
-#'phr_write_pqi(phr_input(sol, phase), path = fil)
-#'if(interactive()) file.show(paste0(fil))
-#'unlink(fil) # tidy up
-#'@export
 
+#' Write phr_input_sections to file
+#'
+#' Write a [phr_input()] generated in tidyphreeqc to
+#' .pqi files readily interpretable by the widely used PHREEQC-Interactive GUI
+#' provided by the USGS to share your models with colleagues.
+#'
+#' The path supplied to the function might typically look something
+#' like this: "~/path/to/my_program.pqi" but note that the ".pqi" ending is
+#' strictly optional and any (or no) file-ending is accepted. However, in order
+#' to be automatically recognised by the PHREEQC-Interactive GUI as a
+#' PHREEQC-input file, the ".pqi" ending is necessary.
+#'
+#' @param x An object of class "phr_input". See [phr_input()] for details
+#' @param path Path to file.
+#'
+#' @return `x`, invisibly
+#'
+#' @examples
+#' # create some phr_input_sections
+#' sol <- phr_solution(pH = 8, pe = 2, Na = 1, Cl = 1, units = "mol/l")
+#' phase <- phr_equilibrium_phases(Halite = c(10, 1))
+#'
+#' fil <- tempfile("data")
+#' phr_write_pqi(phr_input(sol, phase), path = fil)
+#' unlink(fil) # tidy up
+#' @export
 phr_write_pqi <- function(x, path){
 
   # Test if user supplied input is valid
-  if (class(x) != "phr_input") {
-    stop("x must be an object of class phr_input. Type ?phr_input for details!")
-  }
-
-  if (all(purrr::map_lgl(x, is_phr_input_section)) == FALSE) {
-    # This may be a bit redundant now, given that phr_input(...) converts its
-    # arguments automatically, but better safe than sorry I guess.
+  if (!inherits(x, "phr_input")) {
     stop("x must be an object of class phr_input. Type ?phr_input for details!")
   }
 
@@ -55,15 +51,18 @@ phr_write_pqi <- function(x, path){
     append = TRUE,
     sep = "\n"
   )
+
+  invisible(x)
 }
 
 #' Read .pqi-files into tidyphreeqc
 #'
-#' @description load .pqi-files produced by the PHREEQC-interactive GUI into
-#' the tidyphreeqc format \code{\link{phr_input}}
+#' Load .pqi-files produced by the PHREEQC-interactive GUI into
+#' the tidyphreeqc format [phr_input()]
+#'
 #' @param path Path to file.
 #'
-#' @return An object of class \code{\link{phr_input}}
+#' @return An object of class [phr_input()]
 #' @examples
 #' # create some phr_input_sections
 #' sol <- phr_solution(pH = 8, pe = 2, Na = 1, Cl = 1, units = "mol/l")
@@ -82,17 +81,15 @@ phr_read_pqi <- function(path){
 
 #' Detect keywords
 #'
-#' @param x A string, usually a line from a .pqi-file
-#'
-#' @details This function is called by \code{\link{phr_tidy_PHREEQC}}.
+#' This function is called by [phr_tidy_PHREEQC()].
 #' It is not meant to be exported or to be used anywhere else, yet.
 #'
+#' @param x A string, usually a line from a .pqi-file
+#'
+#' @noRd
 #' @return A logical vector indicating whether or not the input was a keyword
 #'
 phr_detect_keyword <- function(x) {
-
-  # get keywords
-  data("keywords", package = "tidyphreeqc")
 
   # check if line begins with four spaces (NOT a keyword)
   catcher <- vector("logical", length = length(x))
@@ -102,27 +99,28 @@ phr_detect_keyword <- function(x) {
     } else {
       # test against keywords dataset
       catcher[[i]] <- purrr::map_lgl(
-        keywords,
+        tidyphreeqc::keywords,
         grepl,
         x = x[i]
       ) %>%
         any()
     }
   }
-  return(catcher)
+
+  catcher
 }
 
 #' Translate PHREEQC to tidyphreeqc
 #'
-#' Take PHREEQC-code and fill it into \code{\link{phr_input_section}}'s
-#' @param x A list of strings that constitute a PHREEQC input block
-#'
-#' @details This function is called by \code{\link{phr_tidy_PHREEQC}}.
+#' Take PHREEQC-code and fill it into [phr_input_section()]s.
+#' This function is called by [phr_tidy_PHREEQC()].
 #' It is not meant to be exported or to be used anywhere else, yet.
 #'
-#' @return A \code{\link{phr_input_section}}
+#' @param x A list of strings that constitute a PHREEQC input block
 #'
-
+#' @noRd
+#' @return A [phr_input_section()]
+#'
 phr_parse_PHREEQC <- function(x) {
   input_vector_list_raw <- strsplit(x, split = " ")
 
@@ -165,27 +163,27 @@ phr_parse_PHREEQC <- function(x) {
 
 #' Deal with input from a .pqi-file
 #'
-#' @param x list of strings that constitute a .pqi-file
-#'
-#' @details This function is the working horse behind \code{\link{phr_read_pqi}}.
+#' This function is the workhorse behind [phr_read_pqi()].
 #' It takes in the list of character vectors read from the .pqi file,
 #' determines when an where that list is to be split along the different
 #' phreeqc keywords and then shoves the pieces into
-#' \code{\link{phr_parse_PHREEQC}} to force meaning upon them.
+#' [phr_parse_PHREEQC()] to force meaning upon them.
 #' It is not meant to be exported or to be used anywhere else, yet.
 #'
-#' @return A \code{\link{phr_input}}
+#' @param x list of strings that constitute a .pqi-file
+#'
+#' @noRd
+#' @return A [phr_input()]
 #'
 phr_tidy_PHREEQC <- function(x){
 
-  #Find the keywords
-  pqi <- x %>%
-    tibble::enframe() %>%
-    dplyr::mutate(is_key = phr_detect_keyword(value))
+  # Find the keywords
+  pqi <- tibble::enframe(x)
+  pqi$is_key <- phr_detect_keyword(pqi$value)
 
   n_keywords <- pqi$is_key[pqi$is_key == TRUE] %>% length()
 
-  if(!(n_keywords >= 1)){
+  if (!(n_keywords >= 1)) {
     stop("Could not identify any PHREEQC keywords.")
   }
 
@@ -204,7 +202,7 @@ phr_tidy_PHREEQC <- function(x){
     phr_parse_PHREEQC
   )
 
-  result <- do.call("phr_input", sections) #gotta love do.call
-  return(result)
+  result <- do.call(phr_input, sections)
 
+  result
 }

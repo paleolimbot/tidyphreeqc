@@ -13,10 +13,10 @@ phr_solution_list(pH = 7, pe = 4, temp = 25, ...)
 
 \item{temp}{the temperature of the solution (degrees C)}
 
-\item{...}{Arguments to \link{phr_solution}, all unique combinations of which will be used.}
+\item{...}{Arguments to \code{\link[=phr_solution]{phr_solution()}}, all unique combinations of which will be used.}
 }
 \value{
-A \link{phr_input}
+A \code{\link[=phr_input]{phr_input()}}
 }
 \description{
 Create a large number of solutions

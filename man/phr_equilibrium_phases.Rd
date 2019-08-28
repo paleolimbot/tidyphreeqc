@@ -14,9 +14,6 @@ phr_equilibrium_phases(.number = 1, .name = NA, ...)
 \item{...}{key/value pairs in the form Component = c(low, high), where low and high
 correspond to saturation indicies.}
 }
-\value{
-A \link{phr_input_section}
-}
 \description{
 Specify a list of phases for which equilibria should be established
 }
@@ -32,4 +29,6 @@ phr_run(
 }
 \seealso{
 \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-13.htm#50528257_61207}
+
+A \code{\link[=phr_input_section]{phr_input_section()}}
 }

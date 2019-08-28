@@ -8,7 +8,7 @@
 #' @seealso
 #' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-41.htm#50528257_30253}
 #'
-#' @return A \link{phr_input_section}
+#' A [phr_input_section()]
 #' @export
 #'
 #' @examples
@@ -27,7 +27,7 @@ phr_solution <- function(.number = 1, .name = "", ...) {
 #' @seealso
 #' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-38.htm#50528257_20239}
 #'
-#' @return A \link{phr_input_section}
+#' A [phr_input_section()]
 #' @export
 #'
 #' @examples
@@ -65,12 +65,12 @@ phr_selected_output <- function(.number = 1, ...) {
 
 #' Create a large number of solutions
 #'
-#' @param ... Arguments to \link{phr_solution}, all unique combinations of which will be used.
+#' @param ... Arguments to [phr_solution()], all unique combinations of which will be used.
 #' @param pH the pH of the solution
 #' @param pe the pe of the solution
 #' @param temp the temperature of the solution (degrees C)
 #'
-#' @return A \link{phr_input}
+#' @return A [phr_input()]
 #' @export
 #'
 #' @examples
@@ -163,7 +163,7 @@ phr_reaction_pressure <- function(.number = 1, low = 0.5, high = 1.5, steps = 10
 #' @seealso
 #' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-13.htm#50528257_61207}
 #'
-#' @return A \link{phr_input_section}
+#' A [phr_input_section()]
 #' @export
 #'
 #' @examples
@@ -182,28 +182,33 @@ phr_equilibrium_phases <- function(.number = 1, .name = NA, ...) {
 
 #' Define a solution master species
 #'
-#' Most master species are defined in the databases. Some are not (e.g., Hg in the default database),
-#' and require specification in the input. This is also a good way to specify components of
-#' a solution that do not dissociate (e.g., Cyanide in the minteq database). Solution master
-#' species must have an associated \link{phr_solution_species} identity reaction (e.g., Hg+2 = Hg+2).
-#' The identity reaction must have a log_k of 0, but can specify other parameters such as gamma
-#' (relationship between activity, concentration, and ionic strength).
+#' Most master species are defined in the databases. Some are not (e.g., Hg in
+#' the default database), and require specification in the input. This is also a
+#' good way to specify components of a solution that do not dissociate (e.g.,
+#' Cyanide in the minteq database). Solution master species must have an
+#' associated [phr_solution_species()] identity reaction (e.g., Hg+2 = Hg+2).
+#' The identity reaction must have a log_k of 0, but can specify other
+#' parameters such as gamma (relationship between activity, concentration, and
+#' ionic strength).
 #'
-#' @param element_name An element name (e.g., As). Can also have a valence state (e.g., Hg(2)).
-#'   If it does have a valence state, the original element must already be defined as a
-#'   phr_solution_master_species. This is the name that will get used to specify concentrations in
-#'   \link{phr_solution}. Can be any name that starts with a capital letter (e.g., "EDTA").
-#' @param master_species The representative species of the element. This is the name that will end up in
-#'   a \link{phr_solution_species} reaction (or any other reaction).
+#' @param element_name An element name (e.g., As). Can also have a valence state
+#'   (e.g., Hg(2)). If it does have a valence state, the original element must
+#'   already be defined as a phr_solution_master_species. This is the name that
+#'   will get used to specify concentrations in [phr_solution()]. Can be any
+#'   name that starts with a capital letter (e.g., "EDTA").
+#' @param master_species The representative species of the element. This is the
+#'   name that will end up in a [phr_solution_species()] reaction (or any other
+#'   reaction).
 #' @param alkalinity The contribution of this species to Alkalinity.
-#' @param gram_formula_weight Weight used for unit conversion from the master species.
-#'   Usually this is the gram formula weight of the element (safest bet), not of the dominant aequeous species.
-#'   The exception of this appears to be SO4 in the databases.
-#'   Use NA to calculate automatically; use NULL to omit.
-#' @param element_gram_formula_weight Weight used for unit conversion from the element.
-#'   Use NA to calculate automatically; use NULL to omit.
+#' @param gram_formula_weight Weight used for unit conversion from the master
+#'   species. Usually this is the gram formula weight of the element (safest
+#'   bet), not of the dominant aequeous species. The exception of this appears
+#'   to be SO4 in the databases. Use NA to calculate automatically; use NULL to
+#'   omit.
+#' @param element_gram_formula_weight Weight used for unit conversion from the
+#'   element. Use NA to calculate automatically; use NULL to omit.
 #'
-#' @return A \link{phr_input_section}.
+#'   A [phr_input_section()].
 #' @export
 #'
 #' @seealso
@@ -276,7 +281,7 @@ phr_solution_master_species <- function(element_name, master_species, alkalinity
 #' Define a surface master species
 #'
 #' Defines a surface and a binding site on that surface (separated by an underscore). An identity
-#' reaction with a log_k of 0 must be included in a \link{phr_surface_species} block.
+#' reaction with a log_k of 0 must be included in a [phr_surface_species()] block.
 #'
 #' @param binding_site_name A name for the binding site, starting with a capital letter and including
 #'   only lowercase letters afterward (e.g., Mysurface). An underscore will denote an additional binding site on the
@@ -284,7 +289,7 @@ phr_solution_master_species <- function(element_name, master_species, alkalinity
 #' @param master_species The formula for the binding site. This is generall the binding site name
 #'   followed by OH (e.g., MysurfaceOH), in what the documentation calls the "OH-form of the binding site).
 #'
-#' @return A \link{phr_input_section}.
+#' A [phr_input_section()].
 #' @export
 #'
 #' @seealso
@@ -305,18 +310,20 @@ phr_surface_master_species <- function(binding_site_name, master_species) {
 
 #' Define a solution/surface species
 #'
-#' @param reaction The formation reaction of the species, e.g.: \code{CO3-2 + H+ = HCO3-}.
-#' @param log_k The equilibrium coefficient of the reaction at 25 degrees C. Alternatively can be specified
-#'   for all temperatures using \code{analytical_expression}.
-#' @param delta_h The enthalpy of reaction, in kJ/mol (or with defined units). Used to determine the
-#'   temperature dependence of K according to the Van't-Hoff equation, if \code{analytical_expression}
-#'   is not provided.
-#' @param analytical_expression Identifier for coefficients for an analytical expression for the
-#'   temperature dependence of log K. Must be a vector of six numeric values:
-#'   \code{A1 + A2*T + A3/T + A4*log10(T) + A5 / T^2 + A6*T^2}.
+#' @param reaction The formation reaction of the species, e.g.: `CO3-2 + H+ =
+#'   HCO3-`.
+#' @param log_k The equilibrium coefficient of the reaction at 25 degrees C.
+#'   Alternatively can be specified for all temperatures using
+#'   `analytical_expression`.
+#' @param delta_h The enthalpy of reaction, in kJ/mol (or with defined units).
+#'   Used to determine the temperature dependence of K according to the
+#'   Van't-Hoff equation, if `analytical_expression` is not provided.
+#' @param analytical_expression Identifier for coefficients for an analytical
+#'   expression for the temperature dependence of log K. Must be a vector of six
+#'   numeric values: `A1 + A2*T + A3/T + A4*log10(T) + A5 / T^2 + A6*T^2`.
 #' @param ... Further arguments in the input block
 #'
-#' @return A \link{phr_input_section}
+#'   A [phr_input_section()]
 #' @export
 #'
 #' @seealso
@@ -341,7 +348,8 @@ phr_surface_master_species <- function(binding_site_name, master_species) {
 #'     phr_selected_output(activities = "HCO3-")
 #'   )
 #'
-phr_solution_species <- function(reaction, log_k = NULL, delta_h = NULL, analytical_expression = NULL, ...) {
+phr_solution_species <- function(reaction, log_k = NULL, delta_h = NULL,
+                                 analytical_expression = NULL, ...) {
   phr_species(
     "SOLUTION_SPECIES",
     reaction = reaction,
@@ -354,7 +362,8 @@ phr_solution_species <- function(reaction, log_k = NULL, delta_h = NULL, analyti
 
 #' @rdname phr_solution_species
 #' @export
-phr_surface_species <- function(reaction, log_k = NULL, delta_h = NULL, analytical_expression = NULL, ...) {
+phr_surface_species <- function(reaction, log_k = NULL, delta_h = NULL,
+                                analytical_expression = NULL, ...) {
   phr_species(
     "SURFACE_SPECIES",
     reaction = reaction,
@@ -365,7 +374,8 @@ phr_surface_species <- function(reaction, log_k = NULL, delta_h = NULL, analytic
   )
 }
 
-phr_species <- function(name, reaction, log_k = NULL, delta_h = NULL, analytical_expression = NULL, ...) {
+phr_species <- function(name, reaction, log_k = NULL, delta_h = NULL,
+                        analytical_expression = NULL, ...) {
 
   stopifnot(
     is.null(analytical_expression) ||
@@ -396,33 +406,39 @@ phr_species <- function(name, reaction, log_k = NULL, delta_h = NULL, analytical
 
 #' Specify a surface
 #'
-#' Surface specification happens in three places: \link{phr_surface_master_species}, which
-#' defines the binding site names, \link{phr_surface_species}, which defines the log_k values
-#' for the binding of solution species to the site, and this function, which defines the number
-#' and density of binding sites (defined in \link{phr_surface_master_species}) that exist in
-#' the solution specified by the 'equilibrate' parameter. It is worth noting that "hydrous
-#' ferric oxide" (Hfo) are included in the main (and several other) databases, including
-#' log_k values for many metals with this surface. These are split into the strong (Hfo_s)
-#' and weak (Hfo_w) sites.
+#' Surface specification happens in three places:
+#' [phr_surface_master_species()], which defines the binding site names,
+#' [phr_surface_species()], which defines the log_k values for the binding of
+#' solution species to the site, and this function, which defines the number and
+#' density of binding sites (defined in [phr_surface_master_species()]) that
+#' exist in the solution specified by the 'equilibrate' parameter. It is worth
+#' noting that "hydrous ferric oxide" (Hfo) are included in the main (and
+#' several other) databases, including log_k values for many metals with this
+#' surface. These are split into the strong (Hfo_s) and weak (Hfo_w) sites.
 #'
 #' @param .number,.name Identifiers for this surface
-#' @param ... One or more phr_surface_item() objects or key/value pairs added to the block. Surface items
-#'   should be in the form binding_site_name = phr_surface_item(...) (where binding_site_name
-#'   is defined in \link{phr_surface_master_species}).
-#' @param equilibrate A \link{phr_solution} number with which this surface should equilibrate. Defaults to 1.
-#' @param sites_units Either absolute (sites speciried in moles) or density (sites specified in sites/ng).
-#' @param sites The number of sites in moles (if sites_units is "absolute"), or the density of sites in
-#'   sites / square nanometer (if sites_units is "density").
-#' @param specific_area_per_gram Area of the surface per gram, in square meters / gram
+#' @param ... One or more phr_surface_item() objects or key/value pairs added to
+#'   the block. Surface items should be in the form binding_site_name =
+#'   phr_surface_item(...) (where binding_site_name is defined in
+#'   [phr_surface_master_species()]).
+#' @param equilibrate A [phr_solution()] number with which this surface should
+#'   equilibrate. Defaults to 1.
+#' @param sites_units Either absolute (sites speciried in moles) or density
+#'   (sites specified in sites/ng).
+#' @param sites The number of sites in moles (if sites_units is "absolute"), or
+#'   the density of sites in sites / square nanometer (if sites_units is
+#'   "density").
+#' @param specific_area_per_gram Area of the surface per gram, in square meters
+#'   / gram
 #' @param grams The number of grams, for specific area calculation
-#' @param diffusion_coefficient The diffusion coefficient in square meters / second, which
-#'   applies in a TRANSPORT calculation to make the surface transport in space (like a colloid
-#'   rather than an immobile surface).
+#' @param diffusion_coefficient The diffusion coefficient in square meters /
+#'   second, which applies in a TRANSPORT calculation to make the surface
+#'   transport in space (like a colloid rather than an immobile surface).
 #'
 #' @seealso
 #' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-45.htm}
 #'
-#' @return A \link{phr_input_section}
+#' A [phr_input_section()]
 #' @export
 #'
 #' @examples
@@ -513,14 +529,13 @@ as.character.phr_surface_item <- function(x, ...) {
 #' Additional simulations may follow in the input data set,
 #' each in turn will be terminated with an END keyword or the end of the file.
 #'
-#'@seealso
-#'\url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-37.html#pgfId-254414}
+#' @seealso
+#' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-37.html#pgfId-254414}
 #'
-#'@return A \link{phr_input_section}
-#'@export
-#'@examples
-#'phr_end()
-#'
+#' A [phr_input_section()]
+#' @export
+#' @examples
+#' phr_end()
 #'
 phr_end <- function() {
   phr_input_section("END")
@@ -536,7 +551,7 @@ phr_end <- function() {
 #' @seealso
 #' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-27.htm#50528257_23725}
 #'
-#' @return A \link{phr_input_section}
+#' A [phr_input_section()]
 #' @export
 #'
 #' @examples
@@ -566,22 +581,22 @@ phr_mix <- function(
 #' @param .number Number of the component
 #' @param .name Name of the component
 #' @param Reaction_amount Amount of components added per step
-#' @param Linear_steps Number of times a \code{Reaction_amount} shall be added
+#' @param Linear_steps Number of times a `Reaction_amount` shall be added
 #' @param units Character vector of length = 1. Either "moles", "millimoles" or "micromoles"
 #' @param ... Further arguments
 #'
 #' @details The steps at which components are added to the solution can be
 #' defined either explicitly or implicitly. For an explicit definition provide
-#' \code{Reaction_amoun} with a vector where each element refers to one
+#' `Reaction_amount` with a vector where each element refers to one
 #'  amount (in "units") at the step of the elements index. For the implicit
-#'  definition, \code{Reaction_amount} needs to be given as a single numeric and
-#'  \code{Linear_steps} is set to the number of times that amount is added to
+#'  definition, `Reaction_amount` needs to be given as a single numeric and
+#'  `Linear_steps` is set to the number of times that amount is added to
 #'  the SOLUTION to cause a REACTION.
 #'
 #' @seealso
 #' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-33.htm#50528257_75635}
 #'
-#' @return A \link{phr_input_section}
+#' A [phr_input_section()]
 #' @export
 #'
 #' @examples
@@ -632,7 +647,10 @@ phr_reaction <- function(
         test_length_amount
       ) == FALSE
     ) {
-      stop("When using linear steps in a reaction, both Reaction_amount and Linear_steps must be numeric vectors of length 1.")
+      stop(
+        "When using linear steps in a reaction, both Reaction_amount ",
+        "and Linear_steps must be numeric vectors of length 1."
+      )
     } else {
       Linear_steps <- as.integer(Linear_steps)
       step_command <- paste0(
@@ -669,41 +687,44 @@ phr_reaction <- function(
 #' While you can state the initial pH and pe of a SOLUTION at its definition,
 #' during a reaction, e.g. with an EQUILIBRIUM_PHASE, these initial conditions
 #' can (will!) change. This does not always match the true behavior of the
-#' system that the modeller is trying to depict. Sometimes the pH and/or pe
-#' of a system are supposed to be held at a constant value. PHREEQC does not
-#' come with a build-in way of fixing pe/pH, but the
-#' \href{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final.html}{User's guide to PHREEQC}
+#' system that the modeller is trying to depict. Sometimes the pH and/or pe of a
+#' system are supposed to be held at a constant value. PHREEQC does not come
+#' with a build-in way of fixing pe/pH, but the [User's guide to
+#' PHREEQC](https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final.html)
 #' provides something of an official workaround by defining pseudo-phases
 #' capable of locking pH or pe at defined values. The functions described here
 #' provide practical shortcuts to these workarounds.
+#'
+#' The theory behind `pe_fix` and `pH_fix` is, that the presence of an
+#' additional phase controls the pe/pH of a system by reaction. For example: if
+#' `phr_pH_fix` is called with default `formula = HCl` in a simulation, PHREEQC
+#' will add or substract [Hydrochloric
+#' acid](https://en.wikipedia.org/wiki/Hydrochloric_acid) to or from your
+#' system, until the specified pH is reached. Note that this will likely modify
+#' the amount of Cl in your system. Make sure this does not affect the
+#' implications of your results! It is possible to use any chemical to control
+#' pH/pe, e.g. switching from HCl to NaOH or from O2 to NaMnO4, as long as the
+#' Elements involved are defined as SOLUTION_MASTER_SPECIES.
+#'
+#' Becaue `pe_fix` and `pH_fix` rely on the equilibration with pseudo-species,
+#' they have to be defined in a PHASES block first, either in your Database or
+#' in your PHREEQC-programm. This can be done via calls to
+#' [phr_pH_fix_definition()] and [phr_pe_fix_definition()]. See the examples
+#' section dor details on the implementation.
 #'
 #' @param pH The desired final pH-value of the solution
 #' @param pe The desired final pe-value of the solution
 #' @param number The number of the component
 #' @param name The name of the component
-#' @param formula The chemical formula that is added or substractet from the solution until the desired equilibrium conditions are reached
-#' @param amount The amount of the species defined by \code{formula} available to try to reach desired equilibrium conditions
-#'
-#' @details The theory behind \code{pe_fix} and \code{pH_fix} is, that the
-#' presence of an additional phase controls the pe/pH of a system by reaction.
-#' For example: if \code{phr_pH_fix} is called with default \code{formula = HCl}
-#' in a simulation, PHREEQC will add or substract \href{https://en.wikipedia.org/wiki/Hydrochloric_acid}{Hydrochloric acid}
-#' to or from your system, until the specified pH is reached. Note that this
-#' will likely modify the amount of Cl in your system. Make sure this does not
-#' affect the implications of your results! It is possible to use any
-#' chemical to control pH/pe, e.g. switching from HCl to NaOH or from O2 to NaMnO4,
-#' as long as the Elements involved are defined as SOLUTION_MASTER_SPECIES.
-#'
-#' Becaue \code{pe_fix} and \code{pH_fix} rely on the equilibration with
-#' pseudo-species, they have to be defined in a PHASES block first, either in your
-#' Database or in your PHREEQC-programm. This can be done via calls to
-#' \code{phr_pH_fix_definition} and \code{phr_pe_fix_definition}. See the
-#' examples section dor details on the implementation.
+#' @param formula The chemical formula that is added or substractet from the
+#'   solution until the desired equilibrium conditions are reached
+#' @param amount The amount of the species defined by `formula` available to try
+#'   to reach desired equilibrium conditions
 #'
 #' @seealso
 #' \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-77.html#pgfId-338379}
 #'
-#' @return A \link{phr_input_section}
+#' @return A [phr_input_section()]
 #' @export
 #'
 #' @examples
@@ -756,7 +777,6 @@ phr_reaction <- function(
 #' tibble::as_tibble()
 #'
 #' res_multi[res_pe$state == "react", c("pH", "pe")]
-
 phr_pH_fix_definition <- function() {
   phr_input_section(
     type = "PHASES",

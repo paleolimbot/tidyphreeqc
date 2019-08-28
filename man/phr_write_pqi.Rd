@@ -7,12 +7,15 @@
 phr_write_pqi(x, path)
 }
 \arguments{
-\item{x}{An object of class "phr_input". See \link{phr_input} for details}
+\item{x}{An object of class "phr_input". See \code{\link[=phr_input]{phr_input()}} for details}
 
 \item{path}{Path to file.}
 }
+\value{
+\code{x}, invisibly
+}
 \description{
-write your phr_input generated in tidyphreeqc to
+Write a \code{\link[=phr_input]{phr_input()}} generated in tidyphreeqc to
 .pqi files readily interpretable by the widely used PHREEQC-Interactive GUI
 provided by the USGS to share your models with colleagues.
 }
@@ -30,6 +33,5 @@ phase <- phr_equilibrium_phases(Halite = c(10, 1))
 
 fil <- tempfile("data")
 phr_write_pqi(phr_input(sol, phase), path = fil)
-if(interactive()) file.show(paste0(fil))
 unlink(fil) # tidy up
 }

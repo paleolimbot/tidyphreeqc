@@ -6,9 +6,6 @@
 \usage{
 phr_end()
 }
-\value{
-A \link{phr_input_section}
-}
 \description{
 This function has no arguments. It creates an END block
 that ends the data input for a simulation. After this keyword is read by
@@ -20,8 +17,9 @@ each in turn will be terminated with an END keyword or the end of the file.
 \examples{
 phr_end()
 
-
 }
 \seealso{
 \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-37.html#pgfId-254414}
+
+A \code{\link[=phr_input_section]{phr_input_section()}}
 }

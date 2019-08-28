@@ -3,12 +3,14 @@ Title: Tidy geochemical modeling using PHREEQC
 Version: 0.0.0.9000
 Authors@R: person("Dewey", "Dunnington", email = "dewey@fishandwhistle.net", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
-Depends: R (>= 3.4.3)
+Depends: R (>= 3.4.0)
 Imports: phreeqc, purrr, dplyr, tibble, magrittr, chemr
+Remotes: paleolimbot/chemr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
 URL: https://github.com/paleolimbot/tidyphreeqc
 BugReports: https://github.com/paleolimbot/tidyphreeqc/issues
 Suggests:

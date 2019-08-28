@@ -13,9 +13,6 @@ phr_mix(.number = 1, .name = "", ...)
 
 \item{...}{Further arguments}
 }
-\value{
-A \link{phr_input_section}
-}
 \description{
 Specify a MIX of solutions
 }
@@ -29,4 +26,6 @@ phr_mix("1" = 0.25, "2" = 0.75)
 }
 \seealso{
 \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-27.htm#50528257_23725}
+
+A \code{\link[=phr_input_section]{phr_input_section()}}
 }

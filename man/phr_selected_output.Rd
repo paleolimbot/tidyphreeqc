@@ -11,9 +11,6 @@ phr_selected_output(.number = 1, ...)
 
 \item{...}{Further arguments}
 }
-\value{
-A \link{phr_input_section}
-}
 \description{
 Specify selected output
 }
@@ -23,4 +20,6 @@ phr_selected_output(pH = TRUE, pe = TRUE, alkalinity = TRUE, activities = c("H+"
 }
 \seealso{
 \url{https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/phreeqc3-html/phreeqc3-38.htm#50528257_20239}
+
+A \code{\link[=phr_input_section]{phr_input_section()}}
 }
