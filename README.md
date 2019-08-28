@@ -1,6 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- badges: start -->
+
+[![Travis build
+status](https://travis-ci.org/paleolimbot/tidyphreeqc.svg?branch=master)](https://travis-ci.org/paleolimbot/tidyphreeqc)
+<!-- badges: end -->
+
 # tidyphreeqc
 
 The goal of tidyphreeqc is to provide a more useful interface to the
@@ -31,7 +37,7 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 0 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file139659a589e3'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpbgYQSX/file1ac6bd49a06'
 ```
 
 To get the results as a data frame, we need to supply a
@@ -44,7 +50,7 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file139665a0f7f9'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpbgYQSX/file1ac6709cbbca'
 #> as_tibble():
 #> # A tibble: 1 x 13
 #>   selected_output   sim state  soln dist_x  time  step    pH    pe
@@ -64,7 +70,7 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file1396c3c1253'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpbgYQSX/file1ac62fc49e88'
 #> as_tibble():
 #> # A tibble: 56 x 13
 #>    selected_output   sim state  soln dist_x  time  step    pH    pe
@@ -100,7 +106,7 @@ phr_run(
 )
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file139623b20a7e'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpbgYQSX/file1ac6ffc9491'
 #> as_tibble():
 #> # A tibble: 1 x 14
 #>   selected_output   sim state  soln dist_x  time  step    pH    pe la_Hg
@@ -124,7 +130,7 @@ result <- phr_run(
 result
 #> <phr_run_output>
 #> PHREEQC run with 1 selected output(s)
-#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpRGU6OE/file13961b026c07'
+#> Raw output at '/var/folders/bq/2rcjstv90nx1_wrt8d3gqw6m0000gn/T//RtmpbgYQSX/file1ac69c10ab8'
 #> as_tibble():
 #> # A tibble: 1,189 x 14
 #>    selected_output   sim state  soln dist_x  time  step    pH    pe la_Hg

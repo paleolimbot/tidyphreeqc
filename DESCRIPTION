@@ -19,5 +19,6 @@ Suggests:
     testthat,
     ggplot2,
     stringr,
-    tidyr
+    tidyr,
+    covr
 VignetteBuilder: knitr
